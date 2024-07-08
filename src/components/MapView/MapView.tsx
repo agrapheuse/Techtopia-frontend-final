@@ -1,18 +1,17 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import './MapView.css';
 import {useAttractions} from "../../tsx/CustomHooks";
 import {Attraction} from "../../model/Attraction";
-import {Box, Drawer, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
+import {Box, Drawer, List, ListItem, ListItemText} from "@mui/material";
 
 export default function MapView() {
     const [nameFilter, setNameFilter] = useState<string>("");
-    const [typeFilter, setTypeFilter] = useState<string>("all");
     const [open, setOpen] = useState(false);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [clickedAttraction, setClickedAttraction] = useState<Attraction | null>(null);
 
-    const {isLoading, isError, attractions} = useAttractions({name: nameFilter, type: typeFilter, open: open})
+    const {isLoading, isError, attractions} = useAttractions({name: nameFilter, open: open})
 
     if (isLoading || !attractions) {
         return <div>Loading...</div>;
@@ -27,6 +26,9 @@ export default function MapView() {
         setIsDrawerOpen(true);
     }
 
+    attractions.map((attraction: Attraction) => (
+        console.log(attraction)
+    ))
 
     return (
         <div className="map-container">

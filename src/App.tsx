@@ -1,6 +1,6 @@
 import React from 'react';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import MapView from "./components/MapView/MapView.tsx";
+import MapView from "./components/MapView/MapView";
 import VisitorInformation from "./components/VisitorInformation";
 import './App.css';
 import {QueryClient, QueryClientProvider} from "react-query";
