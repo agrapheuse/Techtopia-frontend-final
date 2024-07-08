@@ -4,21 +4,15 @@ import {Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {usePointsOfInterest} from "../../tsx/CustomHooks";
 import AttractionRow from "../AttractionRow/AttractionRow";
 import {useState} from "react";
-import {PointOfInterest} from "../../model/PointOfInterest";
 
 export default function ListView() {
     const [nameFilter, setNameFilter] = useState<string>("");
     const [open, setOpen] = useState(false);
 
-    const {isLoading, isError, pointsOfInterest} = usePointsOfInterest({name: nameFilter, open: open})
-    if (isLoading || !pointsOfInterest) {
-        return <div>Loading...</div>;
-    }
+    const {isLoading, isError, attractions, foodStands} = usePointsOfInterest({name: nameFilter, open: open})
 
-    if (pointsOfInterest) {
-        pointsOfInterest.map((poi: PointOfInterest) => (
-            console.log(poi)
-        ))
+    if (isLoading || !attractions || !foodStands) {
+        return <div>Loading...</div>;
     }
 
     if (isError) {
@@ -38,12 +32,21 @@ export default function ListView() {
                     </TableHead>
                     <TableBody>
                         {
-                            pointsOfInterest.map((poi) => (
+                            attractions.map((attraction) => (
                                 <AttractionRow
-                                    key={poi.uuid}
-                                    attraction={poi}
+                                    key={attraction.uuid}
+                                    attraction={attraction}
                                 />
-                            ))}
+                            ))
+                        }
+                        {
+                            foodStands.map((foodStand) => (
+                                <AttractionRow
+                                    key={foodStand.uuid}
+                                    attraction={foodStand}
+                                />
+                            ))
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>

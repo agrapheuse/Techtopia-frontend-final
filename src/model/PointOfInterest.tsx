@@ -1,4 +1,4 @@
-export abstract class PointOfInterest {
+export interface PointOfInterest {
     uuid: string | undefined;
     name: string | undefined;
     description: string | undefined;

@@ -1,6 +1,6 @@
 import { PointOfInterest } from "./PointOfInterest";
 
-export interface Attraction extends PointOfInterest{
+export interface Attraction extends PointOfInterest {
     uuid: string;
     name: string;
     description: string;
@@ -9,4 +9,5 @@ export interface Attraction extends PointOfInterest{
     picturePath: string;
     open: boolean;
     minAge: number;
+    type: string;
 }

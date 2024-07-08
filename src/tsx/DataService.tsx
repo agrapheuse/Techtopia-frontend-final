@@ -23,33 +23,33 @@ export const getAttractions = async ({name, open,}: { name: string | null; open:
 
 export const getFoodStands = async ({name, open,}: { name: string | null; open: boolean | null; }) => {
     if (name && open) {
-        const attractions = await axios.get<FoodStand[]>(`/foodStands?name=${name}&open=${open}`);
-        return attractions.data;
+        const foodStands = await axios.get<FoodStand[]>(`/foodStands?name=${name}&open=${open}`);
+        return foodStands.data;
     } else if (name) {
-        const attractions = await axios.get<FoodStand[]>(`/foodStands?name=${name}`);
-        return attractions.data;
+        const foodStands = await axios.get<FoodStand[]>(`/foodStands?name=${name}`);
+        return foodStands.data;
     } else if (open) {
-        const attractions = await axios.get<FoodStand[]>(`/foodStands?open=${open}`);
-        return attractions.data;
+        const foodStands = await axios.get<FoodStand[]>(`/foodStands?open=${open}`);
+        return foodStands.data;
     } else {
-        const attractions = await axios.get<FoodStand[]>(`/foodStands`);
-        return attractions.data;
+        const foodStands = await axios.get<FoodStand[]>(`/foodStands`);
+        return foodStands.data;
     }
 }
 
 export const getPointsOfInterest = async ({name, open,}: { name: string | null; open: boolean | null; }) => {
     if (name && open) {
-        const attractions = await axios.get<PointOfInterest[]>(`/pointOfInterest?name=${name}&open=${open}`);
-        return attractions.data;
+        const pointsOfInterest = await axios.get<PointOfInterest[]>(`/pointOfInterest?name=${name}&open=${open}`);
+        return pointsOfInterest.data;
     } else if (name) {
-        const attractions = await axios.get<PointOfInterest[]>(`/pointOfInterest?name=${name}`);
-        return attractions.data;
+        const pointsOfInterest = await axios.get<PointOfInterest[]>(`/pointOfInterest?name=${name}`);
+        return pointsOfInterest.data;
     } else if (open) {
-        const attractions = await axios.get<PointOfInterest[]>(`/pointOfInterest?open=${open}`);
-        return attractions.data;
+        const pointsOfInterest = await axios.get<PointOfInterest[]>(`/pointOfInterest?open=${open}`);
+        return pointsOfInterest.data;
     } else {
-        const attractions = await axios.get<PointOfInterest[]>(`/pointOfInterest`);
-        return attractions.data;
+        const pointsOfInterest = await axios.get<PointOfInterest[]>(`/pointOfInterest`);
+        return pointsOfInterest.data;
     }
 }
 
