@@ -1,0 +1,7 @@
+.list-view-container, .map-view-container {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 100px;
+    width: 100%;
+}

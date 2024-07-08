@@ -1,0 +1,47 @@
+.map-container {
+    height: 89vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: #f4ecd7;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.map-image {
+    max-width: 95%;
+    max-height: 98%;
+    width: auto;
+    height: auto;
+    border-radius: 20px;
+    border: 2px dashed #8b572a;
+}
+
+.map-marker {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #f4ecd7;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    opacity: 0.8;
+}
+
+.ride {
+    background-color: #cb1818;
+}
+
+.interactive_exhibit {
+    background-color: #1547cb;
+}
+
+.show {
+    background-color: #3fcb15;
+}
+
+.map-marker:hover {
+    width: 30px;
+    height: 30px;
+}
