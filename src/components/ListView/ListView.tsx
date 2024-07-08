@@ -1,18 +1,24 @@
 import React from "react";
 import {Paper, TableContainer} from "@mui/material";
 import {Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
-import {useAttractions} from "../../tsx/CustomHooks";
+import {usePointsOfInterest} from "../../tsx/CustomHooks";
 import AttractionRow from "../AttractionRow/AttractionRow";
 import {useState} from "react";
+import {PointOfInterest} from "../../model/PointOfInterest";
 
 export default function ListView() {
     const [nameFilter, setNameFilter] = useState<string>("");
-    const [typeFilter, setTypeFilter] = useState<string>("all");
     const [open, setOpen] = useState(false);
 
-    const {isLoading, isError, attractions} = useAttractions({name: nameFilter, type: typeFilter, open: open})
-    if (isLoading || !attractions) {
+    const {isLoading, isError, pointsOfInterest} = usePointsOfInterest({name: nameFilter, open: open})
+    if (isLoading || !pointsOfInterest) {
         return <div>Loading...</div>;
+    }
+
+    if (pointsOfInterest) {
+        pointsOfInterest.map((poi: PointOfInterest) => (
+            console.log(poi)
+        ))
     }
 
     if (isError) {
@@ -32,10 +38,10 @@ export default function ListView() {
                     </TableHead>
                     <TableBody>
                         {
-                            attractions.map((attraction) => (
+                            pointsOfInterest.map((poi) => (
                                 <AttractionRow
-                                    key={attraction.uuid}
-                                    attraction={attraction}
+                                    key={poi.uuid}
+                                    attraction={poi}
                                 />
                             ))}
                     </TableBody>
