@@ -1,8 +1,8 @@
 import React from "react";
 import {Paper, TableContainer} from "@mui/material";
 import {Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
-import {usePointsOfInterest} from "../../tsx/CustomHooks";
-import AttractionRow from "../AttractionRow/AttractionRow";
+import {usePointsOfInterest} from "../../../tsx/CustomHooks.tsx";
+import AttractionRow from "../AttractionRow/AttractionRow.tsx";
 import {useState} from "react";
 
 export default function ListView() {

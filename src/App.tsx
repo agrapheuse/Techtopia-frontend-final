@@ -1,7 +1,9 @@
 import React from 'react';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import MapView from "./components/MapView/MapView";
-import VisitorInformation from "./components/VisitorInformation";
+import VisitorInformation from "./components/visitor information system/VisitorInformation";
+import Menu from "./components/menu/Menu";
+import TicketingSystem from "./components/ticketing system/TicketingSystem";
+import ParkGate from "./components/park gate/ParkGate";
 import './App.css';
 import {QueryClient, QueryClientProvider} from "react-query";
 
@@ -12,8 +14,10 @@ function App() {
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element=<VisitorInformation/>/>
-                    <Route path="/visitorInformation" element=<MapView/>/>
+                    <Route path="/" element=<Menu/>/>
+                    <Route path="/visitorInformation" element=<VisitorInformation/>/>
+                    <Route path="/tickets" element=<TicketingSystem/>/>
+                    <Route path="/parkGate" element=<ParkGate/>/>
                 </Routes>
             </BrowserRouter>
         </QueryClientProvider>
