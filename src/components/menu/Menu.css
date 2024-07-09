@@ -3,5 +3,33 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    height: 100vh;
+    height: 70vh;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+}
+
+.title h1 {
+    margin: 0;
+    margin-top: 2%;
+    color: #2f0101;
+    text-shadow: 0 0 2px #ffa8a8;
+}
+
+.title:before {
+    background-color: white;
+    margin-left: 14%;
+    margin-top: -45%;
+    content:'';
+    position: absolute;
+    width: 1000px;
+    height: 1000px;
+    z-index: -1;
+    border-radius: 500px;
+    border: 5px solid lightgray;
+    left:40px;
 }

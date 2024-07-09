@@ -1,4 +1,5 @@
 .menu-card {
     max-height: 200px;
     max-width: 200px;
+    border-radius: 10px;
 }
