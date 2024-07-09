@@ -14,7 +14,7 @@ export default function InfoViewToggle({ toggleStateList, setToggleStateList }: 
                 color="primary"
                 value={toggleStateList}
                 exclusive
-                onChange={(event, newValue) => {
+                onChange={(_event, newValue) => {
                     if (newValue !== null) {
                         setToggleStateList(newValue);
                     }
