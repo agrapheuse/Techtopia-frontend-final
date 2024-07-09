@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import './MapView.css';
-import {usePointsOfInterest} from "../../../tsx/CustomHooks.tsx";
-import {Attraction} from "../../../model/Attraction.tsx";
+import {usePointsOfInterest} from "../../../tsx/CustomHooks";
+import {Attraction} from "../../../model/Attraction";
 import {Box, Drawer, List, ListItem, ListItemText} from "@mui/material";
-import {FoodStand} from "../../../model/FoodStand.tsx";
+import {FoodStand} from "../../../model/FoodStand";
 
 export default function MapView() {
     const [nameFilter, setNameFilter] = useState<string>("");

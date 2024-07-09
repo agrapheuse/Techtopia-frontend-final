@@ -3,20 +3,20 @@ import {ToggleButtonGroup, ToggleButton} from "@mui/material";
 import './InfoViewToggle.css';
 
 interface InfoViewToggleProps {
-    toggleState: string;
-    setToggleState: (toggleState: string) => void;
+    toggleStateList: string;
+    setToggleStateList: (toggleStateList: string) => void;
 }
 
-export default function InfoViewToggle({ toggleState, setToggleState }: InfoViewToggleProps) {
+export default function InfoViewToggle({ toggleStateList, setToggleStateList }: InfoViewToggleProps) {
     return (
         <div className="info-view-toggle">
             <ToggleButtonGroup
                 color="primary"
-                value={toggleState}
+                value={toggleStateList}
                 exclusive
                 onChange={(event, newValue) => {
                     if (newValue !== null) {
-                        setToggleState(newValue);
+                        setToggleStateList(newValue);
                     }
                 }}
                 aria-label="Platform"

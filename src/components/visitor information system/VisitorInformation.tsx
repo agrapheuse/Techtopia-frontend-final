@@ -6,13 +6,13 @@ import "./VisitorInformation.css";
 
 
 export default function VisitorInformation() {
-    const [toggleState, setToggleState] = useState("list");
+    const [toggleStateList, setToggleStateList] = useState("map");
 
     return (
         <div className="info-view-page-container">
-            <InfoViewToggle toggleState={toggleState} setToggleState={setToggleState} />
+            <InfoViewToggle toggleStateList={toggleStateList} setToggleStateList={setToggleStateList} />
             <div className="info-view-content">
-                {toggleState === "list" ? (
+                {toggleStateList === "list" ? (
                     <div className="list-view-container">
                         <ListView />
                     </div>
