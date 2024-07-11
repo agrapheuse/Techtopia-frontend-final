@@ -1,8 +1,10 @@
 import React, {useContext, useState} from "react";
 import "./TicketingSystem.css"
 import TicketCard from "./TicketCard";
-import {FormControl, MenuItem, InputLabel, Select, SelectChangeEvent} from "@mui/material";
+import {FormControl, MenuItem, InputLabel, Select, SelectChangeEvent, Button, IconButton, Badge} from "@mui/material";
 import TicketContext from "../../context/TicketContext";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import {Ticket} from "../../model/Ticket";
 
 interface TicketItem {
     ticketAgeType: string;
@@ -10,7 +12,7 @@ interface TicketItem {
 }
 
 export default function TicketingSystem() {
-    const { ageType, toggleDrawer } = useContext(TicketContext);
+    const { ageType, setAgeType, toggleDrawer, setToggleDrawer, ticketsInBasket, addTicketToBasket } = useContext(TicketContext);
     const [ticketOption, setTicketOption] = useState('');
 
     const backgroundImageStyle = {
@@ -33,8 +35,24 @@ export default function TicketingSystem() {
         setTicketOption(event.target.value as string);
     };
 
+    const handleSubmit = () => {
+        if (ageType && ticketOption) {
+            const ticket: Ticket = {ageType, ticketOption}
+            addTicketToBasket(ticket)
+            setAgeType('')
+            setTicketOption('')
+            setToggleDrawer(false)
+        }
+    }
+
     return (
         <div style={backgroundImageStyle}>
+            <IconButton className="shopping-cart-icon">
+                <Badge badgeContent={ticketsInBasket.length} color="secondary"
+                       anchorOrigin={{vertical: 'top', horizontal: 'right'}}>
+                    <ShoppingCartIcon/>
+                </Badge>
+            </IconButton>
             <div className="title">
                 <h1>Tickets</h1>
             </div>
@@ -53,6 +71,7 @@ export default function TicketingSystem() {
                     <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Ticket Option</InputLabel>
                         <Select
+                            sx={{margin: 1}}
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={ticketOption}
@@ -63,7 +82,14 @@ export default function TicketingSystem() {
                             <MenuItem value={"VIP"}>VIP</MenuItem>
                         </Select>
                     </FormControl>
-
+                    <Button
+                        className="submit-button"
+                        variant="contained"
+                        endIcon={<ShoppingCartIcon />}
+                        onClick={handleSubmit}
+                    >
+                        Add To Basket
+                    </Button>
                 </div>
             }
         </div>

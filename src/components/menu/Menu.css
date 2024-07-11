@@ -28,7 +28,7 @@
     position: absolute;
     width: 1000px;
     height: 1000px;
-    z-index: -1;
+    z-index: -10;
     border-radius: 500px;
     border: 5px solid lightgray;
     left:40px;

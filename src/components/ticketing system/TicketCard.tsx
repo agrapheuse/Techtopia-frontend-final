@@ -10,7 +10,6 @@ interface TicketCardProps {
 export default function TicketCard({ticketAgeType, ticketOption}: TicketCardProps) {
     const { setAgeType, setToggleDrawer } = useContext(TicketContext);
     const handleClick = () => {
-        console.log("clicked")
         setToggleDrawer(true)
         setAgeType(ticketAgeType);
     };

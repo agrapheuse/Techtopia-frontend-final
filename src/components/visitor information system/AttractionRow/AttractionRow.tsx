@@ -1,6 +1,6 @@
 import React from "react";
 import {TableCell, TableRow} from "@mui/material";
-import {Attraction} from "../../../model/Attraction.tsx";
+import {Attraction} from "../../../model/Attraction";
 
 export default function AttractionRow({attraction}: { attraction: Attraction }) {
     const [showingDetails, setShowingDetails] = React.useState(false);
