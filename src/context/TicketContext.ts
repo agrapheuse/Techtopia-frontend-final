@@ -8,6 +8,7 @@ export interface ISettingsContext {
     setToggleDrawer: React.Dispatch<React.SetStateAction<boolean>>;
     ticketsInBasket: TicketProps[];
     addTicketToBasket: (ticket: TicketProps) => void;
+    emptyTicketsInBasket: () => void;
 }
 
 export default createContext<ISettingsContext>({
@@ -18,4 +19,5 @@ export default createContext<ISettingsContext>({
     ticketsInBasket: [],
     // @ts-ignore
     addTicketToBasket: (ticket: TicketProps) => {},
+    emptyTicketsInBasket: () => {},
 })

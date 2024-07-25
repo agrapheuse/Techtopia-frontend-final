@@ -16,6 +16,10 @@ function TicketProvider({ children }: WithChildren) {
         setTicketsInBasket(prevTickets => [...prevTickets, ticket]);
     };
 
+    const emptyTicketsInBasket = () => {
+        setTicketsInBasket([]);
+    }
+
     const value = {
         ageType,
         setAgeType,
@@ -23,6 +27,7 @@ function TicketProvider({ children }: WithChildren) {
         setToggleDrawer,
         ticketsInBasket: ticketsInBasket ?? [],
         addTicketToBasket,
+        emptyTicketsInBasket,
     }
 
     return (
