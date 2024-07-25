@@ -2,6 +2,11 @@
     display: flex;
     justify-content: center;
     position: absolute;
-    top: 100px;
     width: 100%;
+    margin-top: 6%;
+}
+
+.info-view-toggle {
+    margin-top: 4%;
+    justify-content: center;
 }

@@ -2,8 +2,9 @@ import React, {useState} from "react";
 import './MapView.css';
 import {usePointsOfInterest} from "../../../tsx/CustomHooks";
 import {Attraction} from "../../../model/Attraction";
-import {Box, Drawer, List, ListItem, ListItemText} from "@mui/material";
+import {Box, Drawer, IconButton, List, ListItem, ListItemText, Typography} from "@mui/material";
 import {FoodStand} from "../../../model/FoodStand";
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function MapView() {
     const [nameFilter, setNameFilter] = useState<string>("");
@@ -11,6 +12,8 @@ export default function MapView() {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [clickedPOI, setClickedPOI] = useState<Attraction | FoodStand | null>(null);
+
+    const [showingObject, setShowingObject] = useState<string>("")
 
     const {isLoading, isError, attractions, foodStands} = usePointsOfInterest({name: nameFilter, open: open})
 
@@ -25,11 +28,16 @@ export default function MapView() {
     const showInformation = (poi: Attraction | FoodStand) => {
         setClickedPOI(poi);
         setIsDrawerOpen(true);
+        if ((poi as Attraction).minAge !== undefined) {
+            setShowingObject("Attraction");
+        } else {
+            setShowingObject("FoodStand");
+        }
     }
 
     return (
         <div className="map-container">
-            <img src="/TechtopiaMap.png" alt="map" className="map-image" />
+            <img src="/TechtopiaMap.png" alt="map" className="map-image"/>
             {attractions.map((attraction: Attraction) => (
                 <div
                     key={attraction.uuid}
@@ -53,23 +61,47 @@ export default function MapView() {
                 />
             ))}
             {isDrawerOpen && (
-                <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
-                    <Box>
+                <Drawer
+                    open={isDrawerOpen}
+                    onClose={() => setIsDrawerOpen(false)}
+                    PaperProps={{
+                        sx: {
+                            maxWidth: 400,
+                            width: '100%'
+                        }
+                    }}
+                >
+                    <Box sx={{padding: 2}}>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={() => setIsDrawerOpen(false)}
+                            sx={{
+                                position: 'absolute',
+                                top: 8,
+                                right: 8,
+                                zIndex: 100,
+                            }}
+                        >
+                            <CloseIcon/>
+                        </IconButton>
                         <List>
-                            <ListItem>
-                                <ListItemText primary={clickedPOI?.name} />
+                            <ListItem key="name">
+                                <Typography variant="h6" component="div" sx={{fontWeight: 'bold'}}>
+                                    {clickedPOI?.name}: {showingObject}
+                                </Typography>
                             </ListItem>
                             <ListItem>
-                                <ListItemText primary={clickedPOI?.description} />
+                                <Typography variant="body1">
+                                    {clickedPOI?.description}
+                                </Typography>
                             </ListItem>
                             <ListItem>
-                                <ListItemText primary={clickedPOI?.constructor.name} />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText primary={clickedPOI?.open ? "Open" : "Closed"} />
+                                <Typography variant="body1">
+                                    It is currently {clickedPOI?.open ? "open" : "closed"}
+                                </Typography>
                             </ListItem>
                         </List>
-
                     </Box>
                 </Drawer>
             )}

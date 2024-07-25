@@ -10,7 +10,7 @@ export default function VisitorInformation() {
 
     return (
         <div className="info-view-page-container">
-            <InfoViewToggle toggleStateList={toggleStateList} setToggleStateList={setToggleStateList} />
+            <InfoViewToggle className="info-view-toggle" toggleStateList={toggleStateList} setToggleStateList={setToggleStateList} />
             <div className="info-view-content">
                 {toggleStateList === "list" ? (
                     <div className="list-view-container">
