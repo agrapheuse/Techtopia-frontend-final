@@ -1,5 +1,8 @@
 .ticket-info-container {
     background-color: #f4ecd7;
+    padding: 2%;
+    border-color: #928672;
+    border-radius: 30px;
 }
 
 .ticket-cards-container {
@@ -7,6 +10,7 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    border-radius: 5%;
 }
 
 .add-to-basket-drawer {
@@ -14,6 +18,8 @@
     width: 70%;
     margin: 0 auto;
     padding: 1%;
+    border-color: #928672;
+    border-radius: 20px;
 }
 
 .shopping-cart-icon {

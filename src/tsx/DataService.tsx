@@ -2,6 +2,7 @@ import axios from 'axios';
 import {Attraction} from "../model/Attraction";
 import {FoodStand} from "../model/FoodStand";
 import {PointOfInterest} from "../model/PointOfInterest";
+import {TicketProps} from "../model/Ticket.tsx";
 
 axios.defaults.baseURL = 'http://localhost:8091';
 
@@ -52,4 +53,29 @@ export const getPointsOfInterest = async ({name, open,}: { name: string | null; 
         return pointsOfInterest.data;
     }
 }
+
+const createTicket = async (newTicket: TicketProps) => {
+    try {
+        const response = await axios.post<TicketProps>('/tickets/create', newTicket);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating ticket:', error);
+        throw error;
+    }
+}
+
+const createTicketsOneByOne = async (tickets: TicketProps[]) => {
+    try {
+        const results: T[] = [];
+        for (const ticket of tickets) {
+            const result = await createTicket(ticket);
+            results.push(result);
+        }
+        return results;
+    } catch (error) {
+        console.error('Error creating tickets:', error);
+        throw error;
+    }
+};
+
 

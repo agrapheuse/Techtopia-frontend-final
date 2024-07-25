@@ -1,6 +1,7 @@
 import React, {ReactElement, useState} from 'react'
 import TicketContext from './TicketContext'
-import {Ticket} from "../model/Ticket";
+import {TicketProps} from "../model/Ticket";
+import { useLocalStorage } from 'usehooks-ts'
 
 interface WithChildren {
     children: ReactElement | ReactElement[]
@@ -9,9 +10,9 @@ interface WithChildren {
 function TicketProvider({ children }: WithChildren) {
     const [ageType, setAgeType] = useState<string>('');
     const [toggleDrawer, setToggleDrawer] = useState<boolean>(false);
-    const [ticketsInBasket, setTicketsInBasket] = useState<Ticket[]>([]);
+    const [ticketsInBasket, setTicketsInBasket] = useLocalStorage<TicketProps[]>('tickets-in-basket', [])
 
-    const addTicketToBasket = (ticket: Ticket) => {
+    const addTicketToBasket = (ticket: TicketProps) => {
         setTicketsInBasket(prevTickets => [...prevTickets, ticket]);
     };
 
@@ -20,7 +21,7 @@ function TicketProvider({ children }: WithChildren) {
         setAgeType,
         toggleDrawer,
         setToggleDrawer,
-        ticketsInBasket,
+        ticketsInBasket: ticketsInBasket ?? [],
         addTicketToBasket,
     }
 

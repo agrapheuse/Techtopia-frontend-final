@@ -1,0 +1,11 @@
+.ticket-forms-container {
+    background-color: #f4ecd7;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+}

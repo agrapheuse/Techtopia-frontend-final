@@ -4,7 +4,8 @@ import TicketCard from "./TicketCard";
 import {FormControl, MenuItem, InputLabel, Select, SelectChangeEvent, Button, IconButton, Badge} from "@mui/material";
 import TicketContext from "../../context/TicketContext";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import {Ticket} from "../../model/Ticket";
+import {TicketProps} from "../../model/Ticket";
+import {useNavigate} from "react-router-dom";
 
 interface TicketItem {
     ticketAgeType: string;
@@ -12,8 +13,16 @@ interface TicketItem {
 }
 
 export default function TicketingSystem() {
-    const { ageType, setAgeType, toggleDrawer, setToggleDrawer, ticketsInBasket, addTicketToBasket } = useContext(TicketContext);
+    const {
+        ageType,
+        setAgeType,
+        toggleDrawer,
+        setToggleDrawer,
+        ticketsInBasket,
+        addTicketToBasket
+    } = useContext(TicketContext);
     const [ticketOption, setTicketOption] = useState('');
+    const navigate = useNavigate();
 
     const backgroundImageStyle = {
         backgroundImage: `url(/techtopia-banner.jpg)`,
@@ -37,7 +46,7 @@ export default function TicketingSystem() {
 
     const handleSubmit = () => {
         if (ageType && ticketOption) {
-            const ticket: Ticket = {ageType, ticketOption}
+            const ticket: TicketProps = {ageType, ticketOption}
             addTicketToBasket(ticket)
             setAgeType('')
             setTicketOption('')
@@ -47,8 +56,8 @@ export default function TicketingSystem() {
 
     return (
         <div style={backgroundImageStyle}>
-            <IconButton className="shopping-cart-icon">
-                <Badge badgeContent={ticketsInBasket.length} color="secondary"
+            <IconButton className="shopping-cart-icon" onClick={() => navigate("/cart")}>
+                <Badge badgeContent={ticketsInBasket.length} color="primary"
                        anchorOrigin={{vertical: 'top', horizontal: 'right'}}>
                     <ShoppingCartIcon/>
                 </Badge>
@@ -85,7 +94,7 @@ export default function TicketingSystem() {
                     <Button
                         className="submit-button"
                         variant="contained"
-                        endIcon={<ShoppingCartIcon />}
+                        endIcon={<ShoppingCartIcon/>}
                         onClick={handleSubmit}
                     >
                         Add To Basket

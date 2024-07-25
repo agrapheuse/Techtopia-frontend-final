@@ -20,6 +20,7 @@ type HeaderProps = {
 }
 
 const Header = ({onOpenDrawer}: HeaderProps) => (
+
     <AppBar position="static" color="transparent">
         <Toolbar sx={{justifyContent: 'flex-start'}}>
             <IconButton onClick={onOpenDrawer}>
