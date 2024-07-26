@@ -2,7 +2,7 @@ import React, {createContext} from "react";
 import {TicketProps} from "../model/Ticket";
 
 export interface ISettingsContext {
-    ageType: string
+    ageType: string;
     setAgeType: React.Dispatch<React.SetStateAction<string>>;
     toggleDrawer: boolean;
     setToggleDrawer: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,6 +18,6 @@ export default createContext<ISettingsContext>({
     setToggleDrawer: () => {},
     ticketsInBasket: [],
     // @ts-ignore
-    addTicketToBasket: (ticket: TicketProps) => {},
+    addTicketToBasket: (_ticket: TicketProps) => {},
     emptyTicketsInBasket: () => {},
 })

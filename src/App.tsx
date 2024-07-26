@@ -12,6 +12,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {Navigation} from "./Navigation";
 import ShoppingCart from "./components/ticketing system/shopping cart/ShoppingCart";
+import FilterProvider from "./context/FilterProvider";
 
 const queryClient = new QueryClient();
 
@@ -39,17 +40,19 @@ function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <TicketProvider>
-                <BrowserRouter>
-                    <Header onOpenDrawer={() => setDrawerOpen(!drawerOpen)}/>
-                    <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>
-                    <Routes>
-                        <Route path="/" element=<Menu/>/>
-                        <Route path="/visitorInformation" element=<VisitorInformation/>/>
-                        <Route path="/tickets" element=<TicketingSystem/>/>
-                        <Route path="/cart" element=<ShoppingCart/>/>
-                        <Route path="/parkGate" element=<ParkGate/>/>
-                    </Routes>
-                </BrowserRouter>
+                <FilterProvider>
+                    <BrowserRouter>
+                        <Header onOpenDrawer={() => setDrawerOpen(!drawerOpen)}/>
+                        <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>
+                        <Routes>
+                            <Route path="/" element=<Menu/>/>
+                            <Route path="/visitorInformation" element=<VisitorInformation/>/>
+                            <Route path="/tickets" element=<TicketingSystem/>/>
+                            <Route path="/cart" element=<ShoppingCart/>/>
+                            <Route path="/parkGate" element=<ParkGate/>/>
+                        </Routes>
+                    </BrowserRouter>
+                </FilterProvider>
             </TicketProvider>
         </QueryClientProvider>
     );
