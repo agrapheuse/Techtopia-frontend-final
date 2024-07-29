@@ -1,7 +1,7 @@
 import { PointOfInterest } from "./PointOfInterest";
 
 export interface FoodStand extends PointOfInterest{
-    uuid: string;
+    uuid: {uuid: string};
     name: string;
     description: string;
     posX: number;

@@ -1,26 +1,6 @@
 import axios from 'axios';
-import {Attraction} from "../model/Attraction";
-import {FoodStand} from "../model/FoodStand";
 import {PointOfInterest} from "../model/PointOfInterest";
-import {TicketProps} from "../model/Ticket.tsx";
-
-export const getAttractions = async ({ name, open }: { name: string | null; open: boolean | null; }) => {
-    axios.defaults.baseURL = 'http://localhost:8091';
-    let url = `/attractions?`;
-    if (name) url += `name=${name}&`;
-    if (open) url += `open=${open}`;
-    const attractions = await axios.get<Attraction[]>(url);
-    return attractions.data;
-}
-
-export const getFoodStands = async ({ name, open }: { name: string | null; open: boolean | null; }) => {
-    axios.defaults.baseURL = 'http://localhost:8091';
-    let url = `/foodStands?`;
-    if (name) url += `name=${name}&`;
-    if (open) url += `open=${open}`;
-    const foodStands = await axios.get<FoodStand[]>(url);
-    return foodStands.data;
-}
+import {TicketProps} from "../model/Ticket";
 
 export const getPointsOfInterest = async ({ name, open }: { name: string | null; open: boolean | null; }) => {
     axios.defaults.baseURL = 'http://localhost:8091';
@@ -34,7 +14,7 @@ export const getPointsOfInterest = async ({ name, open }: { name: string | null;
 const createTicket = async (newTicket: TicketProps) => {
     axios.defaults.baseURL = 'http://localhost:8095';
     try {
-        const response = await axios.post<TicketProps>('/tickets/create', newTicket);
+        const response = await axios.post<void>('/tickets/create', newTicket);
         return response.data;
     } catch (error) {
         console.error('Error creating ticket:', error);
@@ -44,7 +24,7 @@ const createTicket = async (newTicket: TicketProps) => {
 
 export const createTicketsOneByOne = async (tickets: TicketProps[]) => {
     try {
-        const results: T[] = [];
+        const results = [];
         for (const ticket of tickets) {
             const result = await createTicket(ticket);
             results.push(result);
@@ -56,4 +36,13 @@ export const createTicketsOneByOne = async (tickets: TicketProps[]) => {
     }
 };
 
-
+export const changeOpenStatus = async (uuid: string, openStatus: boolean) => {
+    axios.defaults.baseURL = 'http://localhost:8092';
+    try {
+        const response = await axios.patch<void>(`/pointOfInterest/changeOpenStatus?uuid=${uuid}&open=${openStatus}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating ticket:', error);
+        throw error;
+    }
+}

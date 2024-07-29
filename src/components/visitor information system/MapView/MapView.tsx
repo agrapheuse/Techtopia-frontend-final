@@ -2,10 +2,9 @@ import React, {useContext, useState} from "react";
 import './MapView.css';
 import {usePointsOfInterest} from "../../../tsx/CustomHooks";
 import {Attraction} from "../../../model/Attraction";
-import {Box, Drawer, IconButton, List, ListItem, Typography} from "@mui/material";
 import {FoodStand} from "../../../model/FoodStand";
-import CloseIcon from '@mui/icons-material/Close';
 import FilterContext from "../../../context/FilterContext";
+import POIInformationDrawer from "../POIInformationDrawer";
 
 interface MapViewProps {
     nameFilter: string;
@@ -39,8 +38,6 @@ export default function MapView({ nameFilter }: MapViewProps) {
         }
     }
 
-    console.log(attractionType);
-
     return (
         <div className="map-container">
                 <img src="/TechtopiaMap.png" alt="map" className="map-image"/>
@@ -48,7 +45,7 @@ export default function MapView({ nameFilter }: MapViewProps) {
                     (
                         attractions.map((attraction: Attraction) => (
                     <div
-                        key={attraction.uuid}
+                        key={attraction.uuid.uuid}
                         className={`map-marker ride`}
                         style={{
                             top: `${attraction.posY}%`,
@@ -63,7 +60,7 @@ export default function MapView({ nameFilter }: MapViewProps) {
                     (
                         foodStands.map((foodStand: FoodStand) => (
                     <div
-                        key={foodStand.uuid}
+                        key={foodStand.uuid.uuid}
                         className={`map-marker food`}
                         style={{
                             top: `${foodStand.posY}%`,
@@ -74,51 +71,7 @@ export default function MapView({ nameFilter }: MapViewProps) {
                 ))) : (
                     <></>
                     )}
-                {isDrawerOpen && (
-                    <Drawer
-                        open={isDrawerOpen}
-                        onClose={() => setIsDrawerOpen(false)}
-                        PaperProps={{
-                            sx: {
-                                maxWidth: 400,
-                                width: '100%'
-                            }
-                        }}
-                    >
-                        <Box sx={{padding: 2}}>
-                            <IconButton
-                                edge="start"
-                                color="inherit"
-                                onClick={() => setIsDrawerOpen(false)}
-                                sx={{
-                                    position: 'absolute',
-                                    top: 8,
-                                    right: 8,
-                                    zIndex: 100,
-                                }}
-                            >
-                                <CloseIcon/>
-                            </IconButton>
-                            <List>
-                                <ListItem key="name">
-                                    <Typography variant="h6" component="div" sx={{fontWeight: 'bold'}}>
-                                        {clickedPOI?.name}: {showingObject}
-                                    </Typography>
-                                </ListItem>
-                                <ListItem>
-                                    <Typography variant="body1">
-                                        {clickedPOI?.description}
-                                    </Typography>
-                                </ListItem>
-                                <ListItem>
-                                    <Typography variant="body1">
-                                        It is currently {clickedPOI?.open ? "open" : "closed"}
-                                    </Typography>
-                                </ListItem>
-                            </List>
-                        </Box>
-                    </Drawer>
-                )}
+            <POIInformationDrawer isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} clickedPOI={clickedPOI} showingObject={showingObject}></POIInformationDrawer>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 export interface PointOfInterest {
-    uuid: string | undefined;
+    uuid: {uuid: string} | undefined;
     name: string | undefined;
     description: string | undefined;
     posX: number | undefined;

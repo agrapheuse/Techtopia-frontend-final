@@ -1,36 +1,8 @@
 import {useQuery} from 'react-query';
-import {getAttractions, getFoodStands, getPointsOfInterest} from "./DataService";
+import {getPointsOfInterest} from "./DataService";
 import {PointOfInterest} from "../model/PointOfInterest";
 import {Attraction} from "../model/Attraction";
 import {FoodStand} from "../model/FoodStand";
-
-export function useAttractions({name, open,}: { name: string | null; open: boolean | null; }) {
-    const {
-        isLoading,
-        isError,
-        data: attractions
-    } = useQuery(["attractions", {name, open}], () => getAttractions({name, open}));
-
-    return {
-        isLoading,
-        isError,
-        attractions
-    }
-}
-
-export function useFoodStands({name, open,}: { name: string | null; open: boolean | null; }) {
-    const {
-        isLoading,
-        isError,
-        data: foodStands
-    } = useQuery(["foodStands", {name, open}], () => getFoodStands({name, open}));
-
-    return {
-        isLoading,
-        isError,
-        foodStands
-    }
-}
 
 function isAttraction(point: PointOfInterest): point is Attraction {
     return (point as Attraction).minAge !== undefined;
