@@ -31,7 +31,7 @@ export default function MapView({ nameFilter }: MapViewProps) {
     const showInformation = (poi: Attraction | FoodStand) => {
         setClickedPOI(poi);
         setIsDrawerOpen(true);
-        if ((poi as Attraction).minAge !== undefined) {
+        if ((poi as Attraction).minHeight !== undefined) {
             setShowingObject("Attraction");
         } else {
             setShowingObject("FoodStand");

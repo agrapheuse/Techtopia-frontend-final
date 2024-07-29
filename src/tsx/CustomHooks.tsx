@@ -5,7 +5,7 @@ import {Attraction} from "../model/Attraction";
 import {FoodStand} from "../model/FoodStand";
 
 function isAttraction(point: PointOfInterest): point is Attraction {
-    return (point as Attraction).minAge !== undefined;
+    return (point as Attraction).minHeight !== undefined;
 }
 
 function isFoodStand(point: PointOfInterest): point is FoodStand {

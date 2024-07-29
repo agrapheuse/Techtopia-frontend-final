@@ -85,6 +85,18 @@ function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showi
                                 </Typography>
                             </ListItem>
                         </List>
+                        {clickedPOI?.picturePath && (
+                            <Box
+                                component="img"
+                                sx={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    marginBottom: 2,
+                                }}
+                                alt={`${clickedPOI?.name} image`}
+                                src={clickedPOI?.picturePath}
+                            />
+                        )}
                         <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-label">Change Open Status</InputLabel>
                             <Select

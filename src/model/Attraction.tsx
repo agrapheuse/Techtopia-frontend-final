@@ -8,6 +8,6 @@ export interface Attraction extends PointOfInterest {
     posY: number;
     picturePath: string;
     open: boolean;
-    minAge: number;
+    minHeight: number;
     type: string;
 }
