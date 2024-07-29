@@ -47,7 +47,7 @@ function TicketDrawer() {
         })));
     }, [ticketsInBasket]);
 
-    const handleInputChange = (index, field, value) => {
+    const handleInputChange = (index: number, field: string, value: string) => {
         const newTicketsState = [...ticketsState];
         newTicketsState[index][field] = value;
         setTicketsState(newTicketsState);

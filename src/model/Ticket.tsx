@@ -4,7 +4,7 @@ export interface TicketProps {
 }
 
 export interface Ticket {
-    date: date;
+    date: Date;
     name: string;
     age: number;
     gender: string;

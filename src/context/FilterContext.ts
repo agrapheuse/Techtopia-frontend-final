@@ -10,7 +10,7 @@ export interface ISettingsContext {
 }
 
 export default createContext<ISettingsContext>({
-    attractionType: '',
+    attractionType: 'all',
     setAttractionType: () => {},
     isOpen: true,
     setIsOpen: () => {},

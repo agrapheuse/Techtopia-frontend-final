@@ -17,7 +17,6 @@ export default createContext<ISettingsContext>({
     toggleDrawer: false,
     setToggleDrawer: () => {},
     ticketsInBasket: [],
-    // @ts-ignore
     addTicketToBasket: (_ticket: TicketProps) => {},
     emptyTicketsInBasket: () => {},
 })
