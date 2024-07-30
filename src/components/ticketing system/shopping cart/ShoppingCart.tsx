@@ -8,7 +8,7 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import "./ShoppingCart.css"
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft';
-import {createTicketsOneByOne} from "../../../tsx/DataService";
+import {createTicketsOneByOne} from "../../../services/DataService";
 import dayjs from "dayjs";
 import {useNavigate} from "react-router-dom";
 

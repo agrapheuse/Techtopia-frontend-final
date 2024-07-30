@@ -14,7 +14,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import {Attraction} from "../../model/Attraction";
 import {FoodStand} from "../../model/FoodStand";
-import {changeOpenStatus} from "../../tsx/DataService";
+import {changeOpenStatus} from "../../services/DataService";
 
 interface POIInformationDrawerProps {
     isDrawerOpen: boolean;
@@ -30,7 +30,7 @@ function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showi
     useEffect(() => {
         setOpenStatus(clickedPOI?.open ? "open" : "close");
         setOriginalOpenStatus(openStatus);
-    }, [clickedPOI, setOpenStatus]);
+    }, [clickedPOI, setOpenStatus, openStatus]);
 
     const saveChanges = async () => {
         if (clickedPOI) {
