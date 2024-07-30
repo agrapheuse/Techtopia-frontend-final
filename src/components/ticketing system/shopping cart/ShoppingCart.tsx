@@ -14,10 +14,10 @@ import {useNavigate} from "react-router-dom";
 
 interface TicketStateProps {
     fullName: string,
-    age: number,
+    age: string,
     gender: string,
-    ageType: string,
-    ticketOption: string;
+    ageType: string | undefined,
+    ticketOption: string | undefined;
 }
 
 function TicketDrawer() {
@@ -47,7 +47,7 @@ function TicketDrawer() {
         })));
     }, [ticketsInBasket]);
 
-    const handleInputChange = (index: number, field: string, value: string) => {
+    const handleInputChange = (index: number, field: keyof TicketStateProps, value: string) => {
         const newTicketsState = [...ticketsState];
         newTicketsState[index][field] = value;
         setTicketsState(newTicketsState);
@@ -64,8 +64,8 @@ function TicketDrawer() {
             name: ticketState.fullName,
             age: Number(ticketState.age),
             gender: ticketState.gender,
-            ticketOption: ticketState.ticketOption.toUpperCase(),
-            ageType: ticketState.ageType.split(" ")[0].toUpperCase(),
+            ticketOption: (ticketState.ticketOption ?? "").toUpperCase(),
+            ageType: (ticketState.ageType ?? "").split(" ")[0].toUpperCase(),
             date: date?.toDate() || new Date(),
             email: email
         }));
@@ -122,7 +122,6 @@ function TicketDrawer() {
                         <div>
                             <h3>You currently have no tickets in your basket</h3>
                             <Button
-                                type="redirect"
                                 variant="contained"
                                 endIcon={<SubdirectoryArrowLeftIcon/>}
                                 onClick={() => navigate("/")}

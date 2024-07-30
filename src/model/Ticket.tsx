@@ -8,7 +8,7 @@ export interface Ticket {
     name: string;
     age: number;
     gender: string;
-    option: string;
+    ticketOption: string;
     ageType: string;
     email: string;
 }
