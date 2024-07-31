@@ -5,12 +5,12 @@ import SecurityContext from '../context/SecurityContext'
 import React from 'react'
 
 export function AuthHeader() {
-    const { isAuthenticated, logout, loggedInUser } = useContext(SecurityContext)
+    const { isAuthenticated, logout, loggedInUser, userEmail } = useContext(SecurityContext)
     return (
         <Stack direction="row" alignItems="center" spacing={2} sx={{ mt: 3, ml: 3 }}>
             {isAuthenticated() && (
                 <>
-                    <Typography>Hello {loggedInUser}</Typography>
+                    <Typography>Hello {loggedInUser}, email: {userEmail}</Typography>
                     <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} onClick={logout}>
                         Log out
                     </Button>

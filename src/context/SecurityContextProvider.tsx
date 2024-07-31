@@ -10,14 +10,15 @@ interface IWithChildren {
 
 const keycloakConfig = {
     url: 'http://localhost:8180',
-    realm: 'Techtopia',
-    clientId: 'TechtopiaReactApp',
+    realm: 'techtopia',
+    clientId: 'techtopiaReactApp',
 }
 
 const keycloak: Keycloak = new Keycloak(keycloakConfig)
 
 function SecurityContextProvider({ children }: IWithChildren) {
     const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined)
+    const [userEmail, setUserEmail] = useState<string | undefined>(undefined)
 
     useEffect(() => {
         keycloak.init({ onLoad: 'login-required' })
@@ -26,6 +27,7 @@ function SecurityContextProvider({ children }: IWithChildren) {
     keycloak.onAuthSuccess = () => {
         addAccessTokenToAuthHeader(keycloak.token)
         setLoggedInUser(keycloak.idTokenParsed?.name)
+        setUserEmail(keycloak.idTokenParsed?.email)
     }
 
     keycloak.onAuthLogout = () => {
@@ -58,6 +60,7 @@ function SecurityContextProvider({ children }: IWithChildren) {
             value={{
                 isAuthenticated,
                 loggedInUser,
+                userEmail,
                 logout,
             }}
         >
