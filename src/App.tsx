@@ -14,6 +14,8 @@ import {Navigation} from "./Navigation";
 import ShoppingCart from "./components/ticketing system/shopping cart/ShoppingCart";
 import FilterProvider from "./context/FilterProvider";
 import SecurityContextProvider from './context/SecurityContextProvider'
+import { AuthHeader } from './components/AuthHeader'
+import RouteGuard from './components/RouteGuard'
 
 const queryClient = new QueryClient();
 
@@ -43,15 +45,16 @@ function App() {
             <SecurityContextProvider>
                 <TicketProvider>
                     <FilterProvider>
+                        <AuthHeader />
                         <BrowserRouter>
                             <Header onOpenDrawer={() => setDrawerOpen(!drawerOpen)}/>
                             <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>
                             <Routes>
-                                <Route path="/" element=<Menu/>/>
-                                <Route path="/visitorInformation" element=<VisitorInformation/>/>
-                                <Route path="/tickets" element=<TicketingSystem/>/>
-                                <Route path="/cart" element=<ShoppingCart/>/>
-                                <Route path="/parkGate" element=<ParkGate/>/>
+                                <Route path="/" element={<RouteGuard component={<Menu/>}/>}/>
+                                <Route path="/visitorInformation" element={<RouteGuard component={<VisitorInformation/>}/>}/>
+                                <Route path="/tickets" element={<RouteGuard component={<TicketingSystem/>}/>}/>
+                                <Route path="/cart" element={<RouteGuard component={<ShoppingCart/>}/>}/>
+                                <Route path="/parkGate" element={<RouteGuard component={<ParkGate/>}/>}/>
                             </Routes>
                         </BrowserRouter>
                     </FilterProvider>

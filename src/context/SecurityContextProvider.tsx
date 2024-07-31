@@ -13,6 +13,7 @@ const keycloakConfig = {
     realm: 'Techtopia',
     clientId: 'TechtopiaReactApp',
 }
+
 const keycloak: Keycloak = new Keycloak(keycloakConfig)
 
 function SecurityContextProvider({ children }: IWithChildren) {
@@ -65,4 +66,4 @@ function SecurityContextProvider({ children }: IWithChildren) {
     )
 }
 
-export default SecurityContextProvider;
+export default SecurityContextProvider
