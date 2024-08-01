@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from "react"
+import React, { useContext, useEffect, useState } from 'react'
 import {
-    Box, Button,
+    Box,
+    Button,
     Drawer,
     FormControl,
     IconButton,
@@ -9,35 +10,38 @@ import {
     ListItem,
     MenuItem,
     Select,
-    Typography
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import {Attraction} from "../../model/Attraction";
-import {FoodStand} from "../../model/FoodStand";
-import {changeOpenStatus} from "../../services/DataService";
+    Typography,
+} from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import { Attraction } from '../../model/Attraction'
+import { FoodStand } from '../../model/FoodStand'
+import { changeOpenStatus } from '../../services/DataService'
+import SecurityContext from '../../context/SecurityContext'
 
 interface POIInformationDrawerProps {
-    isDrawerOpen: boolean;
-    setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    clickedPOI: Attraction | FoodStand | null;
-    showingObject: string;
+    isDrawerOpen: boolean
+    setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
+    clickedPOI: Attraction | FoodStand | null
+    showingObject: string
 }
 
 function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showingObject }: POIInformationDrawerProps) {
-    const [openStatus, setOpenStatus] = useState<string>("");
-    const [originalOpenStatus, setOriginalOpenStatus] = useState<string>("");
+    const [openStatus, setOpenStatus] = useState<string>('')
+    const [originalOpenStatus, setOriginalOpenStatus] = useState<string>('')
+    const {userRole} = useContext(SecurityContext)
 
     useEffect(() => {
-        setOpenStatus(clickedPOI?.open ? "open" : "close");
-        setOriginalOpenStatus(openStatus);
-    }, [clickedPOI, setOpenStatus, openStatus]);
+        if (clickedPOI) {
+            const status = clickedPOI.open ? 'open' : 'close'
+            setOpenStatus(status)
+            setOriginalOpenStatus(status)
+        }
+    }, [clickedPOI])
 
     const saveChanges = async () => {
         if (clickedPOI) {
-            await changeOpenStatus(
-                clickedPOI.uuid.uuid,
-                openStatus === "open");
-            setOriginalOpenStatus(openStatus);
+            await changeOpenStatus(clickedPOI.uuid.uuid, openStatus === 'open')
+            setOriginalOpenStatus(openStatus)
         }
     }
 
@@ -50,11 +54,11 @@ function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showi
                     PaperProps={{
                         sx: {
                             maxWidth: 400,
-                            width: '100%'
-                        }
+                            width: '100%',
+                        },
                     }}
                 >
-                    <Box sx={{padding: 2}}>
+                    <Box sx={{ padding: 2 }}>
                         <IconButton
                             edge="start"
                             color="inherit"
@@ -66,22 +70,20 @@ function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showi
                                 zIndex: 100,
                             }}
                         >
-                            <CloseIcon/>
+                            <CloseIcon />
                         </IconButton>
                         <List>
                             <ListItem key="name">
-                                <Typography variant="h6" component="div" sx={{fontWeight: 'bold'}}>
+                                <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
                                     {clickedPOI?.name}: {showingObject}
                                 </Typography>
                             </ListItem>
                             <ListItem>
-                                <Typography variant="body1">
-                                    {clickedPOI?.description}
-                                </Typography>
+                                <Typography variant="body1">{clickedPOI?.description}</Typography>
                             </ListItem>
                             <ListItem>
                                 <Typography variant="body1">
-                                    It is currently {clickedPOI?.open ? "open" : "closed"}
+                                    It is currently {clickedPOI?.open ? 'open' : 'closed'}
                                 </Typography>
                             </ListItem>
                         </List>
@@ -97,37 +99,41 @@ function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showi
                                 src={clickedPOI?.picturePath}
                             />
                         )}
-                        <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Change Open Status</InputLabel>
-                            <Select
-                                value={openStatus}
-                                label="Change Open Status"
-                                onChange={(e) => setOpenStatus(e.target.value)}
-                            >
-                                <MenuItem value={"open"}>Open</MenuItem>
-                                <MenuItem value={"close"}>Close</MenuItem>
-                            </Select>
-                        </FormControl>
-                        {
-                            originalOpenStatus !== openStatus ? (
-                                <Button
-                                    variant="contained"
-                                    onClick={saveChanges}
-                                    size="large"
-                                    sx={{
-                                        padding: '12px 24px',
-                                        fontSize: '18px',
-                                        backgroundColor: '#f4ecd7',
-                                        color: '#1a1a17',
-                                        zIndex: '1000',
-                                    }}
-                                >
-                                    Save Changes
-                                </Button>
-                            ) : (
-                                <></>
-                            )
-                        }
+                        {userRole?.includes('admin') ? (
+                            <>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Change Open Status</InputLabel>
+                                    <Select
+                                        value={openStatus}
+                                        label="Change Open Status"
+                                        onChange={(e) => setOpenStatus(e.target.value)}
+                                    >
+                                        <MenuItem value={'open'}>Open</MenuItem>
+                                        <MenuItem value={'close'}>Close</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                {originalOpenStatus !== openStatus ? (
+                                    <Button
+                                        variant="contained"
+                                        onClick={saveChanges}
+                                        size="large"
+                                        sx={{
+                                            padding: '12px 24px',
+                                            fontSize: '18px',
+                                            backgroundColor: '#f4ecd7',
+                                            color: '#1a1a17',
+                                            zIndex: '1000',
+                                        }}
+                                    >
+                                        Save Changes
+                                    </Button>
+                                ) : (
+                                    <></>
+                                )}
+                            </>
+                        ) : (
+                            <></>
+                        )}
                     </Box>
                 </Drawer>
             )}

@@ -50,8 +50,8 @@ function App() {
                             <Header onOpenDrawer={() => setDrawerOpen(!drawerOpen)}/>
                             <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>
                             <Routes>
-                                <Route path="/" element={<RouteGuard component={<Menu/>}/>}/>
-                                <Route path="/visitorInformation" element={<RouteGuard component={<VisitorInformation/>}/>}/>
+                                <Route path="/" element={<Menu/>}/>
+                                <Route path="/visitorInformation" element={<VisitorInformation/>}/>
                                 <Route path="/tickets" element={<RouteGuard component={<TicketingSystem/>}/>}/>
                                 <Route path="/cart" element={<RouteGuard component={<ShoppingCart/>}/>}/>
                                 <Route path="/parkGate" element={<RouteGuard component={<ParkGate/>}/>}/>

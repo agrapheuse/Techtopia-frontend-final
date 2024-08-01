@@ -1,16 +1,26 @@
 import React, {useContext, useEffect, useState} from "react";
 import TicketContext from "../../../context/TicketContext";
 import {Ticket, TicketProps} from "../../../model/Ticket";
-import {Button, FormControl, FormHelperText, Input, InputLabel, MenuItem, Select} from "@mui/material";
-import {DatePicker} from '@mui/x-date-pickers/DatePicker';
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
+import {
+    Button,
+    FormControl,
+    Input,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    TextFieldProps, Typography,
+} from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import "./ShoppingCart.css"
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft';
 import {createTicketsOneByOne} from "../../../services/DataService";
 import dayjs from "dayjs";
 import {useNavigate} from "react-router-dom";
+import SecurityContext from '../../../context/SecurityContext'
 
 interface TicketStateProps {
     fullName: string,
@@ -33,7 +43,7 @@ function TicketDrawer() {
     const {ticketsInBasket, emptyTicketsInBasket} = useContext(TicketContext);
     const [ticketsState, setTicketsState] = useState<TicketStateProps[]>([]);
     const [date, setDate] = useState<dayjs.Dayjs | null>(null);  // Use Dayjs type
-    const [email, setEmail] = useState("");
+    const {userEmail} = useContext(SecurityContext);
 
     const navigate = useNavigate();
 
@@ -56,23 +66,26 @@ function TicketDrawer() {
     const clearTickets = () => {
         setDate(null);
         emptyTicketsInBasket();
-        setEmail("");
     }
 
     const handleSubmit = async () => {
-        const tickets: Ticket[] = ticketsState.map(ticketState => ({
-            name: ticketState.fullName,
-            age: Number(ticketState.age),
-            gender: ticketState.gender,
-            ticketOption: (ticketState.ticketOption ?? "").toUpperCase(),
-            ageType: (ticketState.ageType ?? "").split(" ")[0].toUpperCase(),
-            date: date?.toDate() || new Date(),
-            email: email
-        }));
+        if (userEmail === undefined) {
+            alert("You need to be logged in to buy a ticket !");
+        } else {
+            const tickets: Ticket[] = ticketsState.map(ticketState => ({
+                name: ticketState.fullName,
+                age: Number(ticketState.age),
+                gender: ticketState.gender,
+                ticketOption: (ticketState.ticketOption ?? "").toUpperCase(),
+                ageType: (ticketState.ageType ?? "").split(" ")[0].toUpperCase(),
+                date: date?.toDate() || new Date(),
+                email: userEmail
+            }));
 
-        const results = await createTicketsOneByOne(tickets);
-        if (results.every(r => r === '')) {
-            clearTickets();
+            const results = await createTicketsOneByOne(tickets);
+            if (results.every(r => r === '')) {
+                clearTickets();
+            }
         }
     }
 
@@ -133,23 +146,21 @@ function TicketDrawer() {
                     <h1>Final Information</h1>
                     <FormControl fullWidth margin="normal">
                         <DatePicker
-                            id="date-input"
                             value={date}
                             onChange={(newDate) => setDate(newDate)}
                             label="Entry Date"
-                            renderInput={(params) => <Input {...params} />}  // Render the input component
+                            renderInput={(params: TextFieldProps) => <TextField {...params} />}
                         />
                     </FormControl>
-                    <FormControl fullWidth margin="normal">
-                        <InputLabel htmlFor={`email-input`}>Email address</InputLabel>
-                        <Input
-                            id={`email-input`}
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            aria-describedby={`helper-text`}
-                        />
-                        <FormHelperText id={`helper-text`}>We'll never share your email.</FormHelperText>
-                    </FormControl>
+                    <Typography
+                        variant="body1"
+                        margin="normal"
+                        sx={{
+                            padding: 1,
+                        }}
+                    >
+                        The ticket will be saved to your account's email: {userEmail}
+                    </Typography>
                     <Button
                         type="submit"
                         className="submit-button"
