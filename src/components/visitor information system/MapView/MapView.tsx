@@ -1,8 +1,8 @@
 import React, {useContext, useState} from "react";
 import './MapView.css';
-import {usePointsOfInterest} from "../../../hooks/CustomHooks.tsx";
-import {Attraction} from "../../../model/Attraction.ts";
-import {FoodStand} from "../../../model/FoodStand.ts";
+import {usePointsOfInterest} from "../../../hooks/CustomHooks";
+import {Attraction} from "../../../model/Attraction";
+import {FoodStand} from "../../../model/FoodStand";
 import FilterContext from "../../../context/FilterContext";
 import POIInformationDrawer from "../POIInformationDrawer";
 
@@ -11,7 +11,7 @@ interface MapViewProps {
 }
 
 export default function MapView({ nameFilter }: MapViewProps) {
-    const { attractionType , isOpen} = useContext(FilterContext);
+    const { poiType , isOpen} = useContext(FilterContext);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [clickedPOI, setClickedPOI] = useState<Attraction | FoodStand | null>(null);
@@ -41,7 +41,7 @@ export default function MapView({ nameFilter }: MapViewProps) {
     return (
         <div className="map-container">
                 <img src="/TechtopiaMap.png" alt="map" className="map-image"/>
-                {(attractionType === 'attractions' || attractionType === 'all') ?
+                {(poiType === 'attractions' || poiType === 'all') ?
                     (
                         attractions.map((attraction: Attraction) => (
                     <div
@@ -56,7 +56,7 @@ export default function MapView({ nameFilter }: MapViewProps) {
                 ))) : (
                     <></>
                     )}
-                {(attractionType === 'foodStands' || attractionType === 'all') ?
+                {(poiType === 'foodStands' || poiType === 'all') ?
                     (
                         foodStands.map((foodStand: FoodStand) => (
                     <div

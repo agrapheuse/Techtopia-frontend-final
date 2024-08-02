@@ -10,7 +10,7 @@ interface ListViewProps {
 }
 
 export default function ListView({ nameFilter }: ListViewProps) {
-    const { attractionType , isOpen} = useContext(FilterContext);
+    const { poiType , isOpen} = useContext(FilterContext);
     const {isLoading, isError, attractions, foodStands} = usePointsOfInterest({name: nameFilter, open: isOpen})
 
     if (isLoading || !attractions || !foodStands) {
@@ -33,7 +33,7 @@ export default function ListView({ nameFilter }: ListViewProps) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(attractionType === 'attractions' || attractionType === 'all') ?
+                        {(poiType === 'attractions' || poiType === 'all') ?
                             (
                             attractions.map((attraction) => (
                                 <AttractionRow
@@ -43,7 +43,7 @@ export default function ListView({ nameFilter }: ListViewProps) {
                             ))) : (
                                 <></>
                             )}
-                        {(attractionType === 'foodStands' || attractionType === 'all') ?
+                        {(poiType === 'foodStands' || poiType === 'all') ?
                             (
                             foodStands.map((foodStand) => (
                                 <AttractionRow

@@ -6,14 +6,14 @@ interface WithChildren {
 }
 
 function FilterProvider({ children }: WithChildren) {
-    const [attractionType, setAttractionType] = useState<string>('all')
+    const [poiType, setPoiType] = useState<string>('all')
     const [isOpen, setIsOpen] = useState<boolean>(true)
     const [nameFilter, setNameFilter] = useState<string>('')
 
 
     const value = {
-        attractionType,
-        setAttractionType,
+        poiType,
+        setPoiType,
         isOpen,
         setIsOpen,
         nameFilter,

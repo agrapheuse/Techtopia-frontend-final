@@ -4,7 +4,7 @@ import TicketCard from "./TicketCard";
 import {FormControl, MenuItem, InputLabel, Select, SelectChangeEvent, Button, IconButton, Badge} from "@mui/material";
 import TicketContext from "../../context/TicketContext";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import {TicketProps} from "../../model/Ticket.ts";
+import {TicketProps} from "../../model/Ticket";
 import {useNavigate} from "react-router-dom";
 
 interface TicketItem {

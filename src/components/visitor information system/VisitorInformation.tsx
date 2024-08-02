@@ -20,7 +20,7 @@ import useDebounce from "../../hooks/useDebounce";
 export default function VisitorInformation() {
     const [toggleStateList, setToggleStateList] = useState("map");
     const [isTopDrawerOpen, setIsTopDrawerOpen] = useState(false);
-    const {attractionType, setAttractionType, isOpen, setIsOpen, nameFilter, setNameFilter} = useContext(FilterContext);
+    const {poiType, setPoiType, isOpen, setIsOpen, nameFilter, setNameFilter} = useContext(FilterContext);
     const debouncedNameFilter = useDebounce(nameFilter, 500);
 
     const handleTopDrawerOpen = () => {
@@ -32,7 +32,7 @@ export default function VisitorInformation() {
     };
 
     const handleResetFilters = () => {
-        setAttractionType("all");
+        setPoiType("all");
         setIsOpen(false);
         setNameFilter("");
     };
@@ -104,11 +104,11 @@ export default function VisitorInformation() {
                     >
                         <ToggleButtonGroup
                             color="primary"
-                            value={attractionType}
+                            value={poiType}
                             exclusive
                             onChange={(_event, newValue) => {
                                 if (newValue !== null) {
-                                    setAttractionType(newValue);
+                                    setPoiType(newValue);
                                 }
                             }}
                             aria-label="Platform"
