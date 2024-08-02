@@ -4,7 +4,7 @@ import TicketCard from "./TicketCard";
 import {FormControl, MenuItem, InputLabel, Select, SelectChangeEvent, Button, IconButton, Badge} from "@mui/material";
 import TicketContext from "../../context/TicketContext";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import {TicketProps} from "../../model/Ticket";
+import {TicketProps} from "../../model/Ticket.ts";
 import {useNavigate} from "react-router-dom";
 
 interface TicketItem {
@@ -56,7 +56,7 @@ export default function TicketingSystem() {
 
     return (
         <div style={backgroundImageStyle}>
-            <IconButton className="shopping-cart-icon" onClick={() => navigate("/cart")}>
+            <IconButton className="shopping-cart-icon" onClick={() => navigate("/tickets/cart")}>
                 <Badge badgeContent={ticketsInBasket.length} color="primary"
                        anchorOrigin={{vertical: 'top', horizontal: 'right'}}>
                     <ShoppingCartIcon/>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {PointOfInterest} from "../model/PointOfInterest";
-import {TicketProps} from "../model/Ticket";
+import { Ticket, TicketProps } from '../model/Ticket'
 
 export const getPointsOfInterest = async ({ name, open }: { name: string | null; open: boolean | null; }) => {
     axios.defaults.baseURL = 'http://localhost:8091';
@@ -9,6 +9,12 @@ export const getPointsOfInterest = async ({ name, open }: { name: string | null;
     if (open) url += `open=${open}`;
     const pointOfInterest = await axios.get<PointOfInterest[]>(url);
     return pointOfInterest.data;
+}
+
+export const getTicketsForAUser = async ({ email }: { email: string }) => {
+    axios.defaults.baseURL = 'http://localhost:8095';
+    const tickets = await axios.get<Ticket[]>(`/tickets/fetchByEmail?email=${email}`);
+    return tickets.data;
 }
 
 const createTicket = async (newTicket: TicketProps) => {

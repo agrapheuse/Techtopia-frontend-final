@@ -13,8 +13,8 @@ import {
     Typography,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { Attraction } from '../../model/Attraction'
-import { FoodStand } from '../../model/FoodStand'
+import { Attraction } from '../../model/Attraction.ts'
+import { FoodStand } from '../../model/FoodStand.ts'
 import { changeOpenStatus } from '../../services/DataService'
 import SecurityContext from '../../context/SecurityContext'
 
@@ -99,7 +99,7 @@ function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showi
                                 src={clickedPOI?.picturePath}
                             />
                         )}
-                        {userRole?.includes('admin') ? (
+                        {userRole?.includes('admin') && (
                             <>
                                 <FormControl fullWidth>
                                     <InputLabel id="demo-simple-select-label">Change Open Status</InputLabel>
@@ -112,7 +112,7 @@ function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showi
                                         <MenuItem value={'close'}>Close</MenuItem>
                                     </Select>
                                 </FormControl>
-                                {originalOpenStatus !== openStatus ? (
+                                {originalOpenStatus !== openStatus && (
                                     <Button
                                         variant="contained"
                                         onClick={saveChanges}
@@ -127,12 +127,8 @@ function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showi
                                     >
                                         Save Changes
                                     </Button>
-                                ) : (
-                                    <></>
                                 )}
                             </>
-                        ) : (
-                            <></>
                         )}
                     </Box>
                 </Drawer>

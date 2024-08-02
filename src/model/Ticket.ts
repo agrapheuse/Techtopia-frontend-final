@@ -4,6 +4,7 @@ export interface TicketProps {
 }
 
 export interface Ticket {
+    uuid: {uuid: string}
     date: Date;
     name: string;
     age: number;

@@ -1,5 +1,5 @@
 import {useQuery} from 'react-query';
-import {getPointsOfInterest} from "./DataService";
+import { getPointsOfInterest, getTicketsForAUser } from './DataService'
 import {PointOfInterest} from "../model/PointOfInterest";
 import {Attraction} from "../model/Attraction";
 import {FoodStand} from "../model/FoodStand";
@@ -49,5 +49,19 @@ export function usePointsOfInterest({name, open,}: { name: string | null; open: 
         isError,
         attractions,
         foodStands
+    }
+}
+
+export function useTickets({email}: {email: string}) {
+    const {
+        isLoading,
+        isError,
+        data: tickets
+    } = useQuery(["tickets", {email}], () => getTicketsForAUser({email}));
+
+    return {
+        isLoading,
+        isError,
+        tickets: tickets || []
     }
 }
