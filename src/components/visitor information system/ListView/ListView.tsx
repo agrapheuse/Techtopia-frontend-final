@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import {Paper, TableContainer} from "@mui/material";
 import {Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
-import {usePointsOfInterest} from "../../../hooks/CustomHooks.tsx";
+import {usePointsOfInterest} from "../../../hooks/CustomHooks";
 import AttractionRow from "../AttractionRow/AttractionRow";
 import FilterContext from "../../../context/FilterContext";
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import {ToggleButtonGroup, ToggleButton} from "@mui/material";
 import './InfoViewToggle.css';
+import ListIcon from '@mui/icons-material/List';
+import MapIcon from '@mui/icons-material/Map';
 
 interface InfoViewToggleProps {
     toggleStateList: string;
@@ -21,8 +23,12 @@ export default function InfoViewToggle({ toggleStateList, setToggleStateList }: 
                 }}
                 aria-label="Platform"
             >
-                <ToggleButton value="list">List</ToggleButton>
-                <ToggleButton value="map">Map</ToggleButton>
+                <ToggleButton value="list" aria-label="list view">
+                    <ListIcon />
+                </ToggleButton>
+                <ToggleButton value="map" aria-label="map view">
+                    <MapIcon />
+                </ToggleButton>
             </ToggleButtonGroup>
         </div>
     );
