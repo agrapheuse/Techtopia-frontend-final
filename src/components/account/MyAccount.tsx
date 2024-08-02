@@ -1,7 +1,7 @@
 import { Box, Button, Container, Paper, Typography } from '@mui/material'
 import React, { useContext } from 'react'
 import SecurityContext from '../../context/SecurityContext'
-import { useTickets } from '../../services/CustomHooks'
+import { useTickets } from '../../hooks/CustomHooks'
 import { Ticket } from '../../model/Ticket'
 
 export default function MyAccount() {

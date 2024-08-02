@@ -1,6 +1,6 @@
 import React, {useContext, useState} from "react";
 import './MapView.css';
-import {usePointsOfInterest} from "../../../services/CustomHooks";
+import {usePointsOfInterest} from "../../../hooks/CustomHooks.tsx";
 import {Attraction} from "../../../model/Attraction.ts";
 import {FoodStand} from "../../../model/FoodStand.ts";
 import FilterContext from "../../../context/FilterContext";

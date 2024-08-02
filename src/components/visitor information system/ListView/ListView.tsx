@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import {Paper, TableContainer} from "@mui/material";
 import {Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
-import {usePointsOfInterest} from "../../../services/CustomHooks";
+import {usePointsOfInterest} from "../../../hooks/CustomHooks.tsx";
 import AttractionRow from "../AttractionRow/AttractionRow";
 import FilterContext from "../../../context/FilterContext";
 
@@ -37,7 +37,7 @@ export default function ListView({ nameFilter }: ListViewProps) {
                             (
                             attractions.map((attraction) => (
                                 <AttractionRow
-                                    key={attraction.uuid}
+                                    key={attraction.uuid.uuid}
                                     attraction={attraction}
                                 />
                             ))) : (
@@ -47,7 +47,7 @@ export default function ListView({ nameFilter }: ListViewProps) {
                             (
                             foodStands.map((foodStand) => (
                                 <AttractionRow
-                                    key={foodStand.uuid}
+                                    key={foodStand.uuid.uuid}
                                     attraction={foodStand}
                                 />
                             ))) : (
