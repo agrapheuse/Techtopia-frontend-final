@@ -20,6 +20,18 @@ export const getTicketsForAUser = async ({ email, date }: { email: string; date:
     return tickets.data;
 }
 
+export const getTicketStatus = async ({uuid}: {uuid: string}) => {
+    axios.defaults.baseURL = 'http://localhost:8094';
+    const status = await axios.get<string>(`/tickets/ticketStatus?ticketUUID=${uuid}`);
+    return status.data;
+}
+
+export const enterPark = async (uuid: string)=> {
+    axios.defaults.baseURL = 'http://localhost:8094';
+    const response = await axios.post<void>(`/ticketActivity/enter?ticketUUID=${uuid}`);
+    return response;
+}
+
 const createTicket = async (newTicket: TicketProps) => {
     axios.defaults.baseURL = 'http://localhost:8095';
     try {

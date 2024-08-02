@@ -12,4 +12,5 @@ export interface Ticket {
     ticketOption: string;
     ageType: string;
     email: string;
+    status: string;
 }

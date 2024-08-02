@@ -56,12 +56,14 @@ export function useTickets({email, date}: {email: string; date: Date | null}) {
     const {
         isLoading,
         isError,
-        data: tickets
+        data: tickets,
+        refetch
     } = useQuery(["tickets", {email}], () => getTicketsForAUser({email, date}));
 
     return {
         isLoading,
         isError,
-        tickets: tickets || []
+        tickets: tickets || [],
+        refetch
     }
 }

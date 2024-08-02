@@ -1,8 +1,9 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Box, Button, Container, Paper, Typography } from '@mui/material'
 import SecurityContext from '../../context/SecurityContext'
 import { Ticket } from '../../model/Ticket'
 import { useTickets } from '../../hooks/CustomHooks'
+import { enterPark, getTicketStatus } from '../../services/DataService'
 
 export default function ParkGate() {
     const backgroundImageStyle = {
@@ -15,10 +16,40 @@ export default function ParkGate() {
     }
 
     const { userEmail } = useContext(SecurityContext)
-    const { isLoading, isError, tickets } = useTickets({ email: userEmail })
+    const { isLoading, isError, tickets, refetch } = useTickets({ email: userEmail })
+    const [updatedTickets, setUpdatedTickets] = useState<Ticket[]>([])
+
+    const fetchTicketStatuses = useCallback(async () => {
+        if (!isLoading && !isError && tickets.length > 0) {
+            try {
+                const ticketsWithStatus = await Promise.all(
+                    tickets.map(async (ticket) => {
+                        const status = await getTicketStatus({ uuid: ticket.uuid.uuid })
+                        return {
+                            ...ticket,
+                            status,
+                        }
+                    })
+                )
+                setUpdatedTickets(ticketsWithStatus)
+            } catch (error) {
+                console.error('Error fetching ticket statuses:', error)
+            }
+        }
+    }, [isLoading, isError, tickets])
+
+    useEffect(() => {
+        fetchTicketStatuses()
+    }, [fetchTicketStatuses])
 
     const scanTicket = (uuid: string) => {
-
+        enterPark(uuid).then(async (response) => {
+            if (response.status === 201) {
+                console.log("hello")
+                await refetch();
+                fetchTicketStatuses()
+            }
+        })
     }
 
     return (
@@ -53,9 +84,9 @@ export default function ParkGate() {
                             <div>Loading...</div>
                         ) : isError ? (
                             <div>Error loading tickets...</div>
-                        ) : tickets.length > 0 ? (
+                        ) : updatedTickets.length > 0 ? (
                             <Box>
-                                {tickets.map((ticket: Ticket) => (
+                                {updatedTickets.map((ticket: Ticket) => (
                                     <Paper
                                         key={ticket.uuid.uuid}
                                         elevation={2}
@@ -72,6 +103,9 @@ export default function ParkGate() {
                                         </Typography>
                                         <Typography variant="body1">
                                             <strong>Ticket Age Type:</strong> {ticket.ageType}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            <strong>Status:</strong> {ticket.status}
                                         </Typography>
                                         <Button
                                             variant="contained"
