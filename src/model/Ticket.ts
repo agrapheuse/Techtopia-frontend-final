@@ -1,6 +1,7 @@
 export interface TicketProps {
     ageType: string | undefined;
     ticketOption: string | undefined;
+    price: number | undefined;
 }
 
 export interface Ticket {

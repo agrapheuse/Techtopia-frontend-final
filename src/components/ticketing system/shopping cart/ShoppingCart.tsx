@@ -44,6 +44,8 @@ function TicketDrawer() {
     const [ticketsState, setTicketsState] = useState<TicketStateProps[]>([]);
     const [date, setDate] = useState<dayjs.Dayjs | null>(null);  // Use Dayjs type
     const {userEmail} = useContext(SecurityContext);
+    const [totalPrice, setTotalPrice] = useState(0);
+    console.log(ticketsInBasket);
 
     const navigate = useNavigate();
 
@@ -56,6 +58,14 @@ function TicketDrawer() {
             ticketOption: ticket.ticketOption
         })));
     }, [ticketsInBasket]);
+
+    useEffect(() => {
+        const total = ticketsInBasket.reduce((sum, ticket) => sum + parseFloat(ticket.price || '0'), 0);
+        setTotalPrice(total);
+        console.log(total);
+    }, [ticketsInBasket]);
+
+
 
     const handleInputChange = (index: number, field: keyof TicketStateProps, value: string) => {
         const newTicketsState = [...ticketsState];
@@ -136,7 +146,7 @@ function TicketDrawer() {
                             <h3>You currently have no tickets in your basket</h3>
                             <Button
                                 variant="contained"
-                                endIcon={<SubdirectoryArrowLeftIcon/>}
+                                endIcon={<SubdirectoryArrowLeftIcon />}
                                 onClick={() => navigate("/")}
                             >
                                 Go back to the Home Screen
@@ -165,11 +175,16 @@ function TicketDrawer() {
                         type="submit"
                         className="submit-button"
                         variant="contained"
-                        endIcon={<ShoppingCartIcon/>}
+                        endIcon={<ShoppingCartIcon />}
                         onClick={handleSubmit}
                     >
                         Submit and Buy
                     </Button>
+                    <div className="total-price">
+                        <Typography variant="h6" margin="normal" sx={{ padding: 1 }}>
+                            Total Price: ${totalPrice}
+                        </Typography>
+                    </div>
                 </div>
             </div>
         </LocalizationProvider>

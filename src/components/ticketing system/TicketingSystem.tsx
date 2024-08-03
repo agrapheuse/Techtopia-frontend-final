@@ -37,7 +37,7 @@ export default function TicketingSystem() {
         {ticketAgeType: 'Child (4-12)', ticketOption: 'NORMAL: 30$, VIP: 50$'},
         {ticketAgeType: 'Teen (13-19)', ticketOption: 'NORMAL: 60$, VIP: 100$'},
         {ticketAgeType: 'Adult (20-65)', ticketOption: 'NORMAL: 100$, VIP: 220$'},
-        {ticketAgeType: 'Teen (65+)', ticketOption: 'FREE'},
+        {ticketAgeType: 'Senior (65+)', ticketOption: 'FREE'},
     ];
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -46,7 +46,23 @@ export default function TicketingSystem() {
 
     const handleSubmit = () => {
         if (ageType && ticketOption) {
-            const ticket: TicketProps = {ageType, ticketOption}
+            const ticketItem = ticketItems.find(item => item.ticketAgeType === ageType);
+            let price = ''
+
+            if (ticketItem) {
+                if (ticketOption === "Normal") {
+                    const match = ticketItem.ticketOption.match(/NORMAL: (\d+)/);
+                    if (match) {
+                        price = match[1];
+                    }
+                } else if (ticketOption === "VIP") {
+                    const match = ticketItem.ticketOption.match(/VIP: (\d+)/);
+                    if (match) {
+                        price = match[1];
+                    }
+                }
+            }
+            const ticket: TicketProps = {ageType, ticketOption, price: Number(price)}
             addTicketToBasket(ticket)
             setAgeType('')
             setTicketOption('')
