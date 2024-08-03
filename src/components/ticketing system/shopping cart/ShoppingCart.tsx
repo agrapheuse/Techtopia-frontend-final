@@ -1,6 +1,6 @@
-import React, {useContext, useEffect, useState} from "react";
-import TicketContext from "../../../context/TicketContext";
-import {Ticket, TicketProps} from "../../../model/Ticket";
+import React, { useContext, useEffect, useState } from 'react'
+import TicketContext from '../../../context/TicketContext'
+import { Ticket, TicketProps } from '../../../model/Ticket'
 import {
     Button,
     FormControl,
@@ -9,25 +9,26 @@ import {
     MenuItem,
     Select,
     TextField,
-    TextFieldProps, Typography,
+    TextFieldProps,
+    Typography,
 } from '@mui/material'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import "./ShoppingCart.css"
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft';
-import {createTicketsOneByOne} from "../../../services/DataService";
-import dayjs from "dayjs";
-import {useNavigate} from "react-router-dom";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import './ShoppingCart.css'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft'
+import { createTicketsOneByOne } from '../../../services/DataService'
+import dayjs from 'dayjs'
+import { useNavigate } from 'react-router-dom'
 import SecurityContext from '../../../context/SecurityContext'
 
 interface TicketStateProps {
-    fullName: string,
-    age: string,
-    gender: string,
-    ageType: string | undefined,
-    ticketOption: string | undefined;
+    fullName: string
+    age: string
+    gender: string
+    ageType: string | undefined
+    ticketOption: string | undefined
 }
 
 function TicketDrawer() {
@@ -38,63 +39,87 @@ function TicketDrawer() {
         height: '100vh',
         opacity: '0.7',
         backgroundRepeat: 'repeat-y',
-    };
+    }
 
-    const {ticketsInBasket, emptyTicketsInBasket} = useContext(TicketContext);
-    const [ticketsState, setTicketsState] = useState<TicketStateProps[]>([]);
-    const [date, setDate] = useState<dayjs.Dayjs | null>(null);  // Use Dayjs type
-    const {userEmail} = useContext(SecurityContext);
-    const [totalPrice, setTotalPrice] = useState(0);
-    console.log(ticketsInBasket);
+    const { ticketsInBasket, emptyTicketsInBasket } = useContext(TicketContext)
+    const [ticketsState, setTicketsState] = useState<TicketStateProps[]>([])
+    const [date, setDate] = useState<dayjs.Dayjs | null>(null)
+    const { userEmail } = useContext(SecurityContext)
+    const [totalPrice, setTotalPrice] = useState(0)
+    const [errorMessage, setErrorMessage] = useState('')
 
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        setTicketsState(ticketsInBasket.map(ticket => ({
-            fullName: "",
-            age: "",
-            gender: "",
-            ageType: ticket.ageType,
-            ticketOption: ticket.ticketOption
-        })));
-    }, [ticketsInBasket]);
+    const navigate = useNavigate()
 
     useEffect(() => {
-        const total = ticketsInBasket.reduce((sum, ticket) => sum + parseFloat(ticket.price || '0'), 0);
-        setTotalPrice(total);
-        console.log(total);
-    }, [ticketsInBasket]);
+        setTicketsState(
+            ticketsInBasket.map((ticket) => ({
+                fullName: '',
+                age: '',
+                gender: '',
+                ageType: ticket.ageType,
+                ticketOption: ticket.ticketOption,
+            }))
+        )
+    }, [ticketsInBasket])
 
-
+    useEffect(() => {
+        const total = ticketsInBasket.reduce((sum, ticket) => sum + parseFloat(ticket.price || '0'), 0)
+        setTotalPrice(total)
+    }, [ticketsInBasket])
 
     const handleInputChange = (index: number, field: keyof TicketStateProps, value: string) => {
-        const newTicketsState = [...ticketsState];
-        newTicketsState[index][field] = value;
-        setTicketsState(newTicketsState);
-    };
+        const newTicketsState = [...ticketsState]
+        newTicketsState[index][field] = value
+        setTicketsState(newTicketsState)
+    }
 
     const clearTickets = () => {
-        setDate(null);
-        emptyTicketsInBasket();
+        setDate(null)
+        emptyTicketsInBasket()
     }
+
+    const verifyForm = (tickets: TicketStateProps[]): boolean => {
+        for (const ticket of tickets) {
+            if (ticket.fullName.length <= 1) {
+                setErrorMessage(`Full name too short: ${ticket.fullName}`);
+                return false;
+            }
+            const ageLimit = ticket.ageType?.split(' ')[1].toUpperCase().slice(1, -1)
+            const [minAge, maxAge] = ageLimit?.split('-').map(Number);
+            if (Number(ticket.age) <= minAge || Number(ticket.age) >= maxAge) {
+                setErrorMessage(`Age must be corresponding with age bracket for the specific ticket (for person ${ticket.fullName})`);
+                return false;
+            }
+        }
+        const todayDate = dayjs().startOf('day');
+        if (!date || date.isBefore(todayDate, 'day')) {
+            setErrorMessage(`The date must be in the future`);
+            return false;
+        }
+        setErrorMessage('');
+        return true;
+    };
 
     const handleSubmit = async () => {
         if (userEmail === undefined) {
-            alert("You need to be logged in to buy a ticket !");
+            alert('You need to be logged in to buy a ticket !')
         } else {
-            const tickets: Ticket[] = ticketsState.map(ticketState => ({
-                name: ticketState.fullName,
-                age: Number(ticketState.age),
-                gender: ticketState.gender,
-                ticketOption: (ticketState.ticketOption ?? "").toUpperCase(),
-                ageType: (ticketState.ageType ?? "").split(" ")[0].toUpperCase(),
-                date: date?.toDate() || new Date(),
-                email: userEmail
-            }));
+            const correct = verifyForm(ticketsState)
+            if (correct) {
+                const tickets: Ticket[] = ticketsState.map((ticketState) => ({
+                    name: ticketState.fullName,
+                    age: Number(ticketState.age),
+                    gender: ticketState.gender,
+                    ticketOption: (ticketState.ticketOption ?? '').toUpperCase(),
+                    ageType: (ticketState.ageType ?? '').split(' ')[0].toUpperCase(),
+                    date: date?.toDate() || new Date(),
+                    email: userEmail,
+                }))
 
-            const results = await createTicketsOneByOne(tickets);
-            if (results.every(r => r === '')) {
-                clearTickets();
+                const results = await createTicketsOneByOne(tickets)
+                if (results.every((r) => r === '')) {
+                    clearTickets()
+                }
             }
         }
     }
@@ -106,12 +131,14 @@ function TicketDrawer() {
                     {ticketsInBasket.length > 0 ? (
                         ticketsInBasket.map((ticket: TicketProps, index: number) => (
                             <div>
-                                <h1>{ticket.ticketOption}, {ticket.ageType}</h1>
+                                <h1>
+                                    {ticket.ticketOption}, {ticket.ageType}
+                                </h1>
                                 <FormControl fullWidth margin="normal">
                                     <InputLabel htmlFor={`name-input-${index}`}>Full Name</InputLabel>
                                     <Input
                                         id={`name-input-${index}`}
-                                        value={ticketsState[index]?.fullName || ""}
+                                        value={ticketsState[index]?.fullName || ''}
                                         onChange={(e) => handleInputChange(index, 'fullName', e.target.value)}
                                         aria-describedby={`helper-text-${index}`}
                                     />
@@ -120,7 +147,7 @@ function TicketDrawer() {
                                     <InputLabel htmlFor={`age-input-${index}`}>Age</InputLabel>
                                     <Input
                                         id={`age-input-${index}`}
-                                        value={ticketsState[index]?.age || ""}
+                                        value={ticketsState[index]?.age || ''}
                                         onChange={(e) => handleInputChange(index, 'age', e.target.value)}
                                         aria-describedby={`helper-text-${index}`}
                                     />
@@ -130,13 +157,13 @@ function TicketDrawer() {
                                     <Select
                                         labelId={`gender-select-label-${index}`}
                                         id={`gender-select-${index}`}
-                                        value={ticketsState[index]?.gender || ""}
+                                        value={ticketsState[index]?.gender || ''}
                                         onChange={(e) => handleInputChange(index, 'gender', e.target.value)}
                                         label="Gender"
                                     >
-                                        <MenuItem value={"M"}>M</MenuItem>
-                                        <MenuItem value={"MME"}>Mme</MenuItem>
-                                        <MenuItem value={"OTHER"}>Other</MenuItem>
+                                        <MenuItem value={'M'}>M</MenuItem>
+                                        <MenuItem value={'MME'}>Mme</MenuItem>
+                                        <MenuItem value={'OTHER'}>Other</MenuItem>
                                     </Select>
                                 </FormControl>
                             </div>
@@ -147,7 +174,7 @@ function TicketDrawer() {
                             <Button
                                 variant="contained"
                                 endIcon={<SubdirectoryArrowLeftIcon />}
-                                onClick={() => navigate("/")}
+                                onClick={() => navigate('/')}
                             >
                                 Go back to the Home Screen
                             </Button>
@@ -180,6 +207,11 @@ function TicketDrawer() {
                     >
                         Submit and Buy
                     </Button>
+                    {errorMessage !== '' && (
+                        <Typography variant="body1" color="error" sx={{ marginLeft: 2 }}>
+                            {errorMessage}
+                        </Typography>
+                    )}
                     <div className="total-price">
                         <Typography variant="h6" margin="normal" sx={{ padding: 1 }}>
                             Total Price: ${totalPrice}
@@ -188,7 +220,7 @@ function TicketDrawer() {
                 </div>
             </div>
         </LocalizationProvider>
-    );
+    )
 }
 
-export default TicketDrawer;
+export default TicketDrawer
