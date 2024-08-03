@@ -1,62 +1,107 @@
-import React, {useContext} from "react";
-import {Paper, TableContainer} from "@mui/material";
-import {Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
-import {usePointsOfInterest} from "../../../hooks/CustomHooks";
-import AttractionRow from "../AttractionRow/AttractionRow";
-import FilterContext from "../../../context/FilterContext";
+import React, { useContext, useState } from 'react'
+import { Container, Typography, Grid, Button } from '@mui/material'
+import { usePointsOfInterest } from '../../../hooks/CustomHooks'
+import FilterContext from '../../../context/FilterContext'
+import { Attraction } from '../../../model/Attraction'
+import { FoodStand } from '../../../model/FoodStand'
+import POIInformationDrawer from '../POIInformationDrawer'
 
 interface ListViewProps {
-    nameFilter: string;
+    nameFilter: string
 }
 
 export default function ListView({ nameFilter }: ListViewProps) {
-    const { poiType , isOpen} = useContext(FilterContext);
-    const {isLoading, isError, attractions, foodStands} = usePointsOfInterest({name: nameFilter, open: isOpen})
+    const { poiType, isOpen } = useContext(FilterContext)
+    const { isLoading, isError, attractions, foodStands } = usePointsOfInterest({ name: nameFilter, open: isOpen })
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+    const [clickedPOI, setClickedPOI] = useState<Attraction | FoodStand | null>(null)
+
+    const [showingObject, setShowingObject] = useState<string>('')
 
     if (isLoading || !attractions || !foodStands) {
-        return <div>Loading...</div>;
+        return <div>Loading...</div>
     }
 
     if (isError) {
-        return <div>Error...</div>;
+        return <div>Error...</div>
+    }
+
+    let pointsOfInterest: (Attraction | FoodStand)[] = []
+    if (poiType === 'all') {
+        pointsOfInterest = [...attractions, ...foodStands]
+    } else if (poiType === 'attractions') {
+        pointsOfInterest = attractions
+    } else if (poiType === 'foodStands') {
+        pointsOfInterest = foodStands
+    }
+
+    const handleClick = (poi: Attraction | FoodStand) => {
+        setClickedPOI(poi)
+        setIsDrawerOpen(true)
+        if ((poi as Attraction).minHeight !== undefined) {
+            setShowingObject('Attraction')
+        } else {
+            setShowingObject('FoodStand')
+        }
     }
 
     return (
-        <>
-            <TableContainer component={Paper} className="map">
-                <Table aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Open</TableCell>
-                            <TableCell>Type</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {(poiType === 'attractions' || poiType === 'all') ?
-                            (
-                            attractions.map((attraction) => (
-                                <AttractionRow
-                                    key={attraction.uuid.uuid}
-                                    attraction={attraction}
-                                />
-                            ))) : (
-                                <></>
-                            )}
-                        {(poiType === 'foodStands' || poiType === 'all') ?
-                            (
-                            foodStands.map((foodStand) => (
-                                <AttractionRow
-                                    key={foodStand.uuid.uuid}
-                                    attraction={foodStand}
-                                />
-                            ))) : (
-                                <></>
-                            )
-                        }
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </>)
-
+        <Container
+            style={{
+                padding: '2rem',
+            }}
+        >
+            <Grid container spacing={2} justifyContent="center">
+                {pointsOfInterest.map((poi, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                        <Button
+                            onClick={() => handleClick(poi)}
+                            sx={{
+                                width: '100%',
+                                height: '250px',
+                                padding: 0,
+                                borderRadius: '8px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundImage: `url(${poi.picturePath})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                position: 'relative',
+                                color: 'white',
+                                textAlign: 'center',
+                                overflow: 'hidden',
+                                textTransform: 'none',
+                                boxShadow: 'none',
+                                '&:hover': {
+                                    opacity: 0.9,
+                                },
+                            }}
+                            disableRipple
+                        >
+                            <Typography
+                                variant="h6"
+                                style={{
+                                    position: 'absolute',
+                                    bottom: '0',
+                                    left: '0',
+                                    right: '0',
+                                    background: 'rgba(0, 0, 0, 0.5)',
+                                    padding: '0.5rem',
+                                }}
+                            >
+                                {poi.name}
+                            </Typography>
+                        </Button>
+                    </Grid>
+                ))}
+            </Grid>
+            <POIInformationDrawer
+                isDrawerOpen={isDrawerOpen}
+                setIsDrawerOpen={setIsDrawerOpen}
+                clickedPOI={clickedPOI}
+                showingObject={showingObject}
+            ></POIInformationDrawer>
+        </Container>
+    )
 }
