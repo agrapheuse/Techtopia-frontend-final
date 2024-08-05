@@ -3,7 +3,7 @@ import { Box, Button, Container, Paper, Typography } from '@mui/material'
 import SecurityContext from '../../context/SecurityContext'
 import { Ticket } from '../../model/Ticket'
 import { useTickets } from '../../hooks/CustomHooks'
-import { enterPark, getTicketStatus } from '../../services/DataService'
+import { enterPark, exitPark, getTicketStatus } from '../../services/DataService'
 
 export default function ParkGate() {
     const backgroundImageStyle = {
@@ -42,14 +42,23 @@ export default function ParkGate() {
         fetchTicketStatuses()
     }, [fetchTicketStatuses])
 
-    const scanTicket = (uuid: string) => {
-        enterPark(uuid).then(async (response) => {
-            if (response.status === 201) {
-                console.log("hello")
-                await refetch();
-                fetchTicketStatuses()
-            }
-        })
+    const scanTicket = (uuid: string, status: string) => {
+        if (status === "NEW") {
+            enterPark(uuid).then(async (response) => {
+                if (response.status === 201) {
+                    await refetch()
+                    fetchTicketStatuses()
+                }
+            })
+        } else if (status === "ENTERED") {
+            exitPark(uuid).then(async (response) => {
+                if (response.status === 201) {
+                    await refetch()
+                    fetchTicketStatuses()
+                }
+            })
+
+        }
     }
 
     return (
@@ -107,13 +116,27 @@ export default function ParkGate() {
                                         <Typography variant="body1">
                                             <strong>Status:</strong> {ticket.status}
                                         </Typography>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => scanTicket(ticket.uuid.uuid)}
-                                        >
-                                            Scan Ticket
-                                        </Button>
+                                        {ticket.status === 'NEW' ? (
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => scanTicket(ticket.uuid.uuid, ticket.status)}
+                                            >
+                                                Enter Park
+                                            </Button>
+                                        ) : ticket.status === 'ENTERED' ? (
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => scanTicket(ticket.uuid.uuid, ticket.status)}
+                                            >
+                                                Exit Park
+                                            </Button>
+                                        ) : (
+                                            <Typography variant="body1">
+                                                <strong>You have used this ticket</strong>
+                                            </Typography>
+                                        )}
                                     </Paper>
                                 ))}
                             </Box>
