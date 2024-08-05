@@ -24,13 +24,19 @@ interface POIInformationDrawerProps {
     setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
     clickedPOI: Attraction | FoodStand | null
     showingObject: string
-    refetch: UseQueryResult["refetch"];
+    refetch: UseQueryResult['refetch']
 }
 
-function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showingObject, refetch }: POIInformationDrawerProps) {
+function POIInformationDrawer({
+    isDrawerOpen,
+    setIsDrawerOpen,
+    clickedPOI,
+    showingObject,
+    refetch,
+}: POIInformationDrawerProps) {
     const [openStatus, setOpenStatus] = useState<string>('')
     const [originalOpenStatus, setOriginalOpenStatus] = useState<string>('')
-    const {userRole} = useContext(SecurityContext)
+    const { userRole } = useContext(SecurityContext)
 
     useEffect(() => {
         if (clickedPOI) {
@@ -44,7 +50,7 @@ function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showi
         if (clickedPOI) {
             await changeOpenStatus(clickedPOI.uuid.uuid, openStatus === 'open')
             setOriginalOpenStatus(openStatus)
-            await refetch();
+            await refetch()
         }
     }
 
@@ -87,6 +93,13 @@ function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showi
                             <ListItem>
                                 <Typography variant="body1">
                                     It is currently {clickedPOI?.open ? 'open' : 'closed'}
+                                </Typography>
+                            </ListItem>
+                            <ListItem>
+                                <Typography variant="body1">
+                                    {showingObject === 'Attraction'
+                                        ? `Minimum height to enter: ${(clickedPOI as Attraction).minHeight}`
+                                        : `Menu: ${(clickedPOI as FoodStand).menu}`}
                                 </Typography>
                             </ListItem>
                         </List>
