@@ -10,6 +10,8 @@ import {
     ListItem,
     MenuItem,
     Select,
+    ToggleButton,
+    ToggleButtonGroup,
     Typography,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
@@ -18,6 +20,8 @@ import { FoodStand } from '../../model/FoodStand'
 import { changeOpenStatus } from '../../services/DataService'
 import SecurityContext from '../../context/SecurityContext'
 import { UseQueryResult } from 'react-query'
+import { useStaffMembers } from '../../hooks/CustomHooks'
+import { StaffMember } from '../../model/StaffMember'
 
 interface POIInformationDrawerProps {
     isDrawerOpen: boolean
@@ -37,6 +41,34 @@ function POIInformationDrawer({
     const [openStatus, setOpenStatus] = useState<string>('')
     const [originalOpenStatus, setOriginalOpenStatus] = useState<string>('')
     const { userRole } = useContext(SecurityContext)
+    const [selectedStaffMembers, setSelectedStaffMembers] = useState<string[]>([])
+    const [availableStaffMembers, setAvailableStaffMembers] = useState<StaffMember[]>([])
+    const [originalSelectedStaffMembers, setOriginalSelectedStaffMembers] = useState<string[]>([])
+    const {
+        isLoading: isLoadingAllStaffMembers,
+        isError: isErrorAllStaffMembers,
+        staffMembers: allStaffMembers,
+    } = useStaffMembers({ uuid: null })
+    const {
+        isLoading: isLoadingPOIsStaffMembers,
+        isError: isErrorPOIsStaffMembers,
+        staffMembers: POIsStaffMembers,
+    } = useStaffMembers({ uuid: clickedPOI?.uuid.uuid || null })
+
+    useEffect(() => {
+        if (!isLoadingPOIsStaffMembers && !isErrorPOIsStaffMembers) {
+            const newSelectedStaffMembers = POIsStaffMembers.map((member) => member.uuid.uuid)
+            setSelectedStaffMembers(newSelectedStaffMembers)
+            setOriginalSelectedStaffMembers(newSelectedStaffMembers)
+        }
+    }, [isLoadingPOIsStaffMembers, isErrorPOIsStaffMembers, POIsStaffMembers])
+
+    useEffect(() => {
+        if (!isLoadingAllStaffMembers && !isErrorAllStaffMembers) {
+            const available = allStaffMembers.filter((staff) => !staff.poiUUID || staff.poiUUID.uuid === null)
+            setAvailableStaffMembers([...available, ...POIsStaffMembers])
+        }
+    }, [isLoadingAllStaffMembers, isErrorAllStaffMembers, allStaffMembers, POIsStaffMembers])
 
     useEffect(() => {
         if (clickedPOI) {
@@ -45,6 +77,10 @@ function POIInformationDrawer({
             setOriginalOpenStatus(status)
         }
     }, [clickedPOI])
+
+    const handleChange = (_event: React.MouseEvent<HTMLElement>, newStaffMembers: string[]) => {
+        setSelectedStaffMembers(newStaffMembers)
+    }
 
     const saveChanges = async () => {
         if (clickedPOI) {
@@ -128,21 +164,53 @@ function POIInformationDrawer({
                                         <MenuItem value={'close'}>Close</MenuItem>
                                     </Select>
                                 </FormControl>
-                                {originalOpenStatus !== openStatus && (
-                                    <Button
-                                        variant="contained"
-                                        onClick={saveChanges}
-                                        size="large"
-                                        sx={{
-                                            padding: '12px 24px',
-                                            fontSize: '18px',
-                                            backgroundColor: '#f4ecd7',
-                                            color: '#1a1a17',
-                                            zIndex: '1000',
-                                        }}
+                                <FormControl fullWidth sx={{ marginTop: 2 }}>
+                                    <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                                        Assign Staff Members
+                                    </Typography>
+                                    <ToggleButtonGroup
+                                        orientation="vertical"
+                                        value={selectedStaffMembers}
+                                        onChange={handleChange}
+                                        aria-label="assign staff members"
                                     >
-                                        Save Changes
-                                    </Button>
+                                        {isLoadingAllStaffMembers ? (
+                                            <div>Loading...</div>
+                                        ) : isErrorAllStaffMembers ? (
+                                            <div>Error loading staff members...</div>
+                                        ) : allStaffMembers.length > 0 ? (
+                                            availableStaffMembers.map((staffMember: StaffMember) => (
+                                                <ToggleButton
+                                                    key={staffMember.uuid.uuid}
+                                                    value={staffMember.uuid.uuid}
+                                                    aria-label={staffMember.name}
+                                                >
+                                                    {staffMember.name}
+                                                </ToggleButton>
+                                            ))
+                                        ) : (
+                                            <div>No staff members available</div>
+                                        )}
+                                    </ToggleButtonGroup>
+                                </FormControl>
+                                {(originalOpenStatus !== openStatus ||
+                                    originalSelectedStaffMembers.toString() !== selectedStaffMembers.toString()) && (
+                                    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+                                        <Button
+                                            variant="contained"
+                                            onClick={saveChanges}
+                                            size="large"
+                                            sx={{
+                                                padding: '12px 24px',
+                                                fontSize: '18px',
+                                                backgroundColor: '#f4ecd7',
+                                                color: '#1a1a17',
+                                                zIndex: '1000',
+                                            }}
+                                        >
+                                            Save Changes
+                                        </Button>
+                                    </Box>
                                 )}
                             </>
                         )}

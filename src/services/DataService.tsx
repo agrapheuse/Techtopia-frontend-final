@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { PointOfInterest } from '../model/PointOfInterest'
 import { Ticket, TicketProps } from '../model/Ticket'
+import { StaffMember } from '../model/StaffMember'
 
 export const getPointsOfInterest = async ({ name, open }: { name: string | null; open: boolean | null }) => {
     axios.defaults.baseURL = 'http://localhost:8091'
@@ -69,5 +70,17 @@ export const changeOpenStatus = async (uuid: string, openStatus: boolean) => {
     } catch (error) {
         console.error('Error creating ticket:', error)
         throw error
+    }
+}
+
+export const getStaffMembers = async (uuid: string | null) => {
+    axios.defaults.baseURL = 'http://localhost:8092'
+
+    if (uuid) {
+        const staffMembers = await axios.get<StaffMember[]>(`/staffMember/staffOfPOI?uuid=${uuid}`)
+        return staffMembers.data
+    } else {
+        const staffMembers = await axios.get<StaffMember[]>("/staffMember")
+        return staffMembers.data
     }
 }
