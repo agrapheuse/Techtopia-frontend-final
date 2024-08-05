@@ -68,7 +68,18 @@ export const changeOpenStatus = async (uuid: string, openStatus: boolean) => {
         const response = await axios.patch<void>(`/pointOfInterest/changeOpenStatus?uuid=${uuid}&open=${openStatus}`)
         return response.data
     } catch (error) {
-        console.error('Error creating ticket:', error)
+        console.error('Error updating open status:', error)
+        throw error
+    }
+}
+
+export const updateStaffMembers = async (uuid: string, staffUUIDs: string[]) => {
+    axios.defaults.baseURL = 'http://localhost:8092'
+    try {
+        const response = await axios.patch<void>(`/pointOfInterest/updateStaffMembers?poiUuid=${uuid}&staffMemberUuids=${staffUUIDs}`)
+        return response.data
+    } catch (error) {
+        console.error('Error updating staff members:', error)
         throw error
     }
 }

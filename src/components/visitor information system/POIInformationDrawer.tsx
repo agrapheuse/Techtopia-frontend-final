@@ -17,7 +17,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import { Attraction } from '../../model/Attraction'
 import { FoodStand } from '../../model/FoodStand'
-import { changeOpenStatus } from '../../services/DataService'
+import { changeOpenStatus, updateStaffMembers } from '../../services/DataService'
 import SecurityContext from '../../context/SecurityContext'
 import { UseQueryResult } from 'react-query'
 import { useStaffMembers } from '../../hooks/CustomHooks'
@@ -84,9 +84,16 @@ function POIInformationDrawer({
 
     const saveChanges = async () => {
         if (clickedPOI) {
-            await changeOpenStatus(clickedPOI.uuid.uuid, openStatus === 'open')
-            setOriginalOpenStatus(openStatus)
-            await refetch()
+            if (originalOpenStatus !== openStatus) {
+                await changeOpenStatus(clickedPOI.uuid.uuid, openStatus === 'open')
+                setOriginalOpenStatus(openStatus)
+                await refetch()
+            } else if (originalSelectedStaffMembers.toString() !== selectedStaffMembers.toString()) {
+                console.log(selectedStaffMembers)
+                await updateStaffMembers(clickedPOI.uuid.uuid, selectedStaffMembers)
+                setOriginalSelectedStaffMembers(selectedStaffMembers)
+                await refetch()
+            }
         }
     }
 
