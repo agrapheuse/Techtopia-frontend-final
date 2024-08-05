@@ -89,7 +89,6 @@ function POIInformationDrawer({
                 setOriginalOpenStatus(openStatus)
                 await refetch()
             } else if (originalSelectedStaffMembers.toString() !== selectedStaffMembers.toString()) {
-                console.log(selectedStaffMembers)
                 await updateStaffMembers(clickedPOI.uuid.uuid, selectedStaffMembers)
                 setOriginalSelectedStaffMembers(selectedStaffMembers)
                 await refetch()
