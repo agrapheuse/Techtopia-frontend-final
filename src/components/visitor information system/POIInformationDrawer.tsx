@@ -13,19 +13,21 @@ import {
     Typography,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { Attraction } from '../../model/Attraction.ts'
-import { FoodStand } from '../../model/FoodStand.ts'
+import { Attraction } from '../../model/Attraction'
+import { FoodStand } from '../../model/FoodStand'
 import { changeOpenStatus } from '../../services/DataService'
 import SecurityContext from '../../context/SecurityContext'
+import { UseQueryResult } from 'react-query'
 
 interface POIInformationDrawerProps {
     isDrawerOpen: boolean
     setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
     clickedPOI: Attraction | FoodStand | null
     showingObject: string
+    refetch: UseQueryResult["refetch"];
 }
 
-function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showingObject }: POIInformationDrawerProps) {
+function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showingObject, refetch }: POIInformationDrawerProps) {
     const [openStatus, setOpenStatus] = useState<string>('')
     const [originalOpenStatus, setOriginalOpenStatus] = useState<string>('')
     const {userRole} = useContext(SecurityContext)
@@ -42,6 +44,7 @@ function POIInformationDrawer({ isDrawerOpen, setIsDrawerOpen, clickedPOI, showi
         if (clickedPOI) {
             await changeOpenStatus(clickedPOI.uuid.uuid, openStatus === 'open')
             setOriginalOpenStatus(openStatus)
+            await refetch();
         }
     }
 

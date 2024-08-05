@@ -20,7 +20,7 @@ const shuffleArray = (array: any[]) => {
 
 export default function ListView({ nameFilter }: ListViewProps) {
     const { poiType, isOpen } = useContext(FilterContext)
-    const { isLoading, isError, attractions, foodStands } = usePointsOfInterest({ name: nameFilter, open: isOpen })
+    const { isLoading, isError, attractions, foodStands , refetch} = usePointsOfInterest({ name: nameFilter, open: isOpen })
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [clickedPOI, setClickedPOI] = useState<Attraction | FoodStand | null>(null)
 
@@ -111,6 +111,7 @@ export default function ListView({ nameFilter }: ListViewProps) {
                 setIsDrawerOpen={setIsDrawerOpen}
                 clickedPOI={clickedPOI}
                 showingObject={showingObject}
+                refetch={refetch}
             ></POIInformationDrawer>
         </Container>
     )

@@ -39,7 +39,8 @@ export function usePointsOfInterest({name, open,}: { name: string | null; open: 
     const {
         isLoading,
         isError,
-        data: pointsOfInterest
+        data: pointsOfInterest,
+        refetch
     } = useQuery(["pointsOfInterest", {name, open}], () => getPointsOfInterest({name, open}));
 
     const {attractions, foodStands} = separatePointsOfInterest(pointsOfInterest)
@@ -48,7 +49,8 @@ export function usePointsOfInterest({name, open,}: { name: string | null; open: 
         isLoading,
         isError,
         attractions,
-        foodStands
+        foodStands,
+        refetch
     }
 }
 
