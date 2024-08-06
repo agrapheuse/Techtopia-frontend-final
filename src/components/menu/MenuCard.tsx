@@ -13,11 +13,12 @@ const MenuCard: React.FC<MenuCardProps> = ({imagePath, cardName, path}) => {
     const navigate = useNavigate();
 
     return (
-        <Card sx={{width: 250, height: 300, margin: 1}}>
+        <Card className="menu-card">
             <CardActionArea onClick={() => navigate(path)}>
                 <CardMedia className="card-image"
                            component="img"
                            image={imagePath}
+                           alt={cardName}
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div" align="center">

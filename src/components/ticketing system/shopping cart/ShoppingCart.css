@@ -6,6 +6,33 @@
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    padding: 20px;
+    padding: 30px;
     border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button {
+    margin-top: 20px;
+    background-color: #3f51b5;
+    color: white;
+}
+
+.submit-button:hover {
+    background-color: #303f9f;
+}
+
+.ticket-forms-container .MuiFormControl-root {
+    margin-bottom: 20px;
+}
+
+.total-price, .error-message {
+    margin-top: 20px;
+}
+
+.total-price {
+    font-weight: bold;
+}
+
+.error-message {
+    color: red;
 }

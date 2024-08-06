@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from 'react'
 import MenuCard from "./MenuCard";
 import "./Menu.css"
 
@@ -14,23 +14,21 @@ const menuItems: MenuItem[] = [
     {imagePath: '/gate-icon.png', cardName: 'Park Gates', path: '/parkGate'},
 ];
 
-const backgroundImageStyle = {
-    backgroundImage: `url(/techtopia-banner.jpg)`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    height: '100vh',
-    opacity: '0.7',
-};
-
 export default function Menu() {
+    useEffect(() => {
+        document.body.classList.add('no-scroll');
+
+        return () => {
+            document.body.classList.remove('no-scroll');
+        };
+    }, []);
+
     return (
-        <div style={backgroundImageStyle}>
+        <div className="menu-background">
             <div className="title">
                 <h1>Techtopia</h1>
             </div>
-
             <div className="menu-container">
-
                 {menuItems.map((item) => (
                     <MenuCard key={item.cardName} {...item} />
                 ))}

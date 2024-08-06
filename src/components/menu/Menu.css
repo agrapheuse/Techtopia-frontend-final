@@ -1,35 +1,47 @@
-.menu-container {
+.menu-background {
+    background-image: url('/public/techtopia-banner.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+}
+
+.menu-background::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.no-scroll {
     overflow: hidden;
-    height: 70vh;
 }
 
 .title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3em;
+    position: relative;
+    z-index: 1;
 }
 
 .title h1 {
-    margin: 0;
-    margin-top: 2%;
-    color: #2f0101;
-    text-shadow: 0 0 2px #ffa8a8;
+    color: white;
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
-.title:before {
-    background-color: white;
-    margin-left: 14%;
-    margin-top: -45%;
-    content:'';
-    position: absolute;
-    width: 1000px;
-    height: 1000px;
-    z-index: -10;
-    border-radius: 500px;
-    border: 5px solid lightgray;
-    left:40px;
+.menu-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
 }

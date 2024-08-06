@@ -3,13 +3,14 @@ import TicketContext from '../../../context/TicketContext'
 import { Ticket, TicketProps } from '../../../model/Ticket'
 import {
     Button,
+    Card,
+    CardContent,
     FormControl,
     Input,
     InputLabel,
     MenuItem,
     Select,
     TextField,
-    TextFieldProps,
     Typography,
 } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
@@ -30,6 +31,48 @@ interface TicketStateProps {
     ageType: string | undefined
     ticketOption: string | undefined
 }
+
+const TicketForm = ({ ticket, index, ticketsState, handleInputChange }) => (
+    <Card variant="outlined" className="ticket-card">
+        <CardContent>
+            <Typography variant="h5">
+                {ticket.ticketOption}, {ticket.ageType}
+            </Typography>
+            <FormControl fullWidth margin="normal">
+                <InputLabel htmlFor={`name-input-${index}`}>Full Name</InputLabel>
+                <Input
+                    id={`name-input-${index}`}
+                    value={ticketsState[index]?.fullName || ''}
+                    onChange={(e) => handleInputChange(index, 'fullName', e.target.value)}
+                    aria-describedby={`helper-text-${index}`}
+                />
+            </FormControl>
+            <FormControl fullWidth margin="normal">
+                <InputLabel htmlFor={`age-input-${index}`}>Age</InputLabel>
+                <Input
+                    id={`age-input-${index}`}
+                    value={ticketsState[index]?.age || ''}
+                    onChange={(e) => handleInputChange(index, 'age', e.target.value)}
+                    aria-describedby={`helper-text-${index}`}
+                />
+            </FormControl>
+            <FormControl fullWidth margin="normal">
+                <InputLabel htmlFor={`gender-input-${index}`}>Gender</InputLabel>
+                <Select
+                    labelId={`gender-select-label-${index}`}
+                    id={`gender-select-${index}`}
+                    value={ticketsState[index]?.gender || ''}
+                    onChange={(e) => handleInputChange(index, 'gender', e.target.value)}
+                    label="Gender"
+                >
+                    <MenuItem value={'M'}>M</MenuItem>
+                    <MenuItem value={'MME'}>Mme</MenuItem>
+                    <MenuItem value={'OTHER'}>Other</MenuItem>
+                </Select>
+            </FormControl>
+        </CardContent>
+    </Card>
+)
 
 function TicketDrawer() {
     const backgroundImageStyle = {
@@ -130,47 +173,17 @@ function TicketDrawer() {
                 <div className="ticket-forms-container">
                     {ticketsInBasket.length > 0 ? (
                         ticketsInBasket.map((ticket: TicketProps, index: number) => (
-                            <div>
-                                <h1>
-                                    {ticket.ticketOption}, {ticket.ageType}
-                                </h1>
-                                <FormControl fullWidth margin="normal">
-                                    <InputLabel htmlFor={`name-input-${index}`}>Full Name</InputLabel>
-                                    <Input
-                                        id={`name-input-${index}`}
-                                        value={ticketsState[index]?.fullName || ''}
-                                        onChange={(e) => handleInputChange(index, 'fullName', e.target.value)}
-                                        aria-describedby={`helper-text-${index}`}
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="normal">
-                                    <InputLabel htmlFor={`age-input-${index}`}>Age</InputLabel>
-                                    <Input
-                                        id={`age-input-${index}`}
-                                        value={ticketsState[index]?.age || ''}
-                                        onChange={(e) => handleInputChange(index, 'age', e.target.value)}
-                                        aria-describedby={`helper-text-${index}`}
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="normal">
-                                    <InputLabel htmlFor={`gender-input-${index}`}>Gender</InputLabel>
-                                    <Select
-                                        labelId={`gender-select-label-${index}`}
-                                        id={`gender-select-${index}`}
-                                        value={ticketsState[index]?.gender || ''}
-                                        onChange={(e) => handleInputChange(index, 'gender', e.target.value)}
-                                        label="Gender"
-                                    >
-                                        <MenuItem value={'M'}>M</MenuItem>
-                                        <MenuItem value={'MME'}>Mme</MenuItem>
-                                        <MenuItem value={'OTHER'}>Other</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </div>
+                            <TicketForm
+                                key={index}
+                                ticket={ticket}
+                                index={index}
+                                ticketsState={ticketsState}
+                                handleInputChange={handleInputChange}
+                            />
                         ))
                     ) : (
                         <div>
-                            <h3>You currently have no tickets in your basket</h3>
+                            <Typography variant="h6">You currently have no tickets in your basket</Typography>
                             <Button
                                 variant="contained"
                                 endIcon={<SubdirectoryArrowLeftIcon />}
@@ -180,43 +193,47 @@ function TicketDrawer() {
                             </Button>
                         </div>
                     )}
-                    <h1>Final Information</h1>
-                    <FormControl fullWidth margin="normal">
-                        <DatePicker
-                            value={date}
-                            onChange={(newDate) => setDate(newDate)}
-                            label="Entry Date"
-                            renderInput={(params: TextFieldProps) => <TextField {...params} />}
-                        />
-                    </FormControl>
-                    <Typography
-                        variant="body1"
-                        margin="normal"
-                        sx={{
-                            padding: 1,
-                        }}
-                    >
-                        The ticket will be saved to your account's email: {userEmail}
-                    </Typography>
-                    <Button
-                        type="submit"
-                        className="submit-button"
-                        variant="contained"
-                        endIcon={<ShoppingCartIcon />}
-                        onClick={handleSubmit}
-                    >
-                        Submit and Buy
-                    </Button>
-                    {errorMessage !== '' && (
-                        <Typography variant="body1" color="error" sx={{ marginLeft: 2 }}>
-                            {errorMessage}
-                        </Typography>
+                    {ticketsInBasket.length > 0 && (
+                        <>
+                            <Typography variant="h4">Final Information</Typography>
+                            <FormControl fullWidth margin="normal">
+                                <DatePicker
+                                    value={date}
+                                    onChange={(newDate) => setDate(newDate)}
+                                    label="Entry Date"
+                                    renderInput={(params: TextFieldProps) => <TextField {...params} />}
+                                />
+                            </FormControl>
+                            <Typography
+                                variant="body1"
+                                margin="normal"
+                                sx={{
+                                    padding: 1,
+                                }}
+                            >
+                                The ticket will be saved to your account's email: {userEmail}
+                            </Typography>
+                            <Button
+                                type="submit"
+                                className="submit-button"
+                                variant="contained"
+                                endIcon={<ShoppingCartIcon />}
+                                onClick={handleSubmit}
+                            >
+                                Submit and Buy
+                            </Button>
+                            {errorMessage !== '' && (
+                                <Typography variant="body1" className="error-message">
+                                    {errorMessage}
+                                </Typography>
+                            )}
+                            <div className="total-price">
+                                <Typography variant="h6" margin="normal" sx={{ padding: 1 }}>
+                                    Total Price: ${totalPrice}
+                                </Typography>
+                            </div>
+                        </>
                     )}
-                    <div className="total-price">
-                        <Typography variant="h6" margin="normal" sx={{ padding: 1 }}>
-                            Total Price: ${totalPrice}
-                        </Typography>
-                    </div>
                 </div>
             </div>
         </LocalizationProvider>
