@@ -40,8 +40,7 @@ export const exitPark = async (uuid: string) => {
 const createTicket = async (newTicket: TicketProps) => {
     axios.defaults.baseURL = 'http://localhost:8095'
     try {
-        const response = await axios.post<void>('/tickets/create', newTicket)
-        return response.data
+        return await axios.post<void>('/tickets/create', newTicket)
     } catch (error) {
         console.error('Error creating ticket:', error)
         throw error
@@ -65,8 +64,7 @@ export const createTicketsOneByOne = async (tickets: TicketProps[]) => {
 export const changeOpenStatus = async (uuid: string, openStatus: boolean) => {
     axios.defaults.baseURL = 'http://localhost:8092'
     try {
-        const response = await axios.patch<void>(`/pointOfInterest/changeOpenStatus?uuid=${uuid}&open=${openStatus}`)
-        return response.data
+        return await axios.patch<void>(`/pointOfInterest/changeOpenStatus?uuid=${uuid}&open=${openStatus}`)
     } catch (error) {
         console.error('Error updating open status:', error)
         throw error
@@ -76,8 +74,9 @@ export const changeOpenStatus = async (uuid: string, openStatus: boolean) => {
 export const updateStaffMembers = async (uuid: string, staffUUIDs: string[]) => {
     axios.defaults.baseURL = 'http://localhost:8092'
     try {
-        const response = await axios.patch<void>(`/pointOfInterest/updateStaffMembers?poiUuid=${uuid}&staffMemberUuids=${staffUUIDs}`)
-        return response.data
+        return await axios.patch<void>(
+            `/pointOfInterest/updateStaffMembers?poiUuid=${uuid}&staffMemberUuids=${staffUUIDs}`
+        )
     } catch (error) {
         console.error('Error updating staff members:', error)
         throw error
@@ -91,7 +90,7 @@ export const getStaffMembers = async (uuid: string | null) => {
         const staffMembers = await axios.get<StaffMember[]>(`/staffMember/staffOfPOI?uuid=${uuid}`)
         return staffMembers.data
     } else {
-        const staffMembers = await axios.get<StaffMember[]>("/staffMember")
+        const staffMembers = await axios.get<StaffMember[]>('/staffMember')
         return staffMembers.data
     }
 }

@@ -10,7 +10,7 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    TextField,
+    TextField, TextFieldProps,
     Typography,
 } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
@@ -159,9 +159,17 @@ function TicketDrawer() {
                     email: userEmail,
                 }))
 
-                const results = await createTicketsOneByOne(tickets)
-                if (results.every((r) => r === '')) {
-                    clearTickets()
+                try {
+                    const responses = await createTicketsOneByOne(tickets)
+                    const failedResponses = responses.filter(r => r.status !== 201)
+
+                    if (failedResponses.length > 0) {
+                        setErrorMessage('Some tickets could not be processed. Please visit the my account page to see which ticket was processed.');
+                    } else {
+                        clearTickets()
+                    }
+                } catch (error) {
+                    setErrorMessage('An error occurred while processing your request. Please try again.');
                 }
             }
         }

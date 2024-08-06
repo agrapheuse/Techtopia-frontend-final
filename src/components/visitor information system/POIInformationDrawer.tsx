@@ -85,13 +85,29 @@ function POIInformationDrawer({
     const saveChanges = async () => {
         if (clickedPOI) {
             if (originalOpenStatus !== openStatus) {
-                await changeOpenStatus(clickedPOI.uuid.uuid, openStatus === 'open')
-                setOriginalOpenStatus(openStatus)
-                await refetch()
+                try {
+                    const response = await changeOpenStatus(clickedPOI.uuid.uuid, openStatus === 'open')
+                    if (response.status !== 201) {
+                        alert('something went wrong, please try again later')
+                    } else {
+                        setOriginalOpenStatus(openStatus)
+                        await refetch()
+                    }
+                } catch (error) {
+                    alert('something went wrong: ' + error)
+                }
             } else if (originalSelectedStaffMembers.toString() !== selectedStaffMembers.toString()) {
-                await updateStaffMembers(clickedPOI.uuid.uuid, selectedStaffMembers)
-                setOriginalSelectedStaffMembers(selectedStaffMembers)
-                await refetch()
+                try {
+                    const response = await updateStaffMembers(clickedPOI.uuid.uuid, selectedStaffMembers)
+                    if (response.status !== 201) {
+                        alert('something went wrong, please try again later')
+                    } else {
+                        setOriginalSelectedStaffMembers(selectedStaffMembers)
+                        await refetch()
+                    }
+                } catch (error) {
+                    alert('something went wrong: ' + error)
+                }
             }
         }
     }
