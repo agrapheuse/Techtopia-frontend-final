@@ -1,9 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Box, Button, Container, Paper, Typography } from '@mui/material'
 import SecurityContext from '../../context/SecurityContext'
 import { Ticket } from '../../model/Ticket'
 import { useTickets } from '../../hooks/CustomHooks'
-import { enterPark, exitPark, getTicketStatus } from '../../services/DataService'
+import { enterPark, exitPark } from '../../services/DataService'
 
 export default function ParkGate() {
     const backgroundImageStyle = {
@@ -17,7 +17,6 @@ export default function ParkGate() {
 
     const { userEmail } = useContext(SecurityContext)
     const { isLoading, isError, tickets, refetch } = useTickets({ email: userEmail })
-    const [updatedTickets, setUpdatedTickets] = useState<Ticket[]>([])
     const [todaysTicket, setTodaysTicket] = useState<Ticket[]>([])
 
     useEffect(() => {
@@ -30,47 +29,25 @@ export default function ParkGate() {
                 const formattedTicketDate = ticketDate.toISOString().split('T')[0]
                 return formattedTicketDate === formattedToday
             })
-            console.log(todaysTicket)
             setTodaysTicket(todayTickets)
         }
-    }, [isError, isLoading, tickets, todaysTicket])
-
-    const fetchTicketStatuses = useCallback(async () => {
-        if (!isLoading && !isError && tickets.length > 0) {
-            try {
-                const ticketsWithStatus = await Promise.all(
-                    todaysTicket.map(async (ticket) => {
-                        const status = await getTicketStatus({ uuid: ticket.uuid.uuid })
-                        return {
-                            ...ticket,
-                            status,
-                        }
-                    })
-                )
-                setUpdatedTickets(ticketsWithStatus)
-            } catch (error) {
-                console.error('Error fetching ticket statuses:', error)
-            }
-        }
-    }, [isLoading, isError, tickets.length, todaysTicket])
-
-    useEffect(() => {
-        fetchTicketStatuses().then(_r => {})
-    }, [fetchTicketStatuses])
+    }, [isError, isLoading, tickets])
 
     const scanTicket = (uuid: string, status: string) => {
         if (status === 'NEW') {
             enterPark(uuid).then(async (response) => {
                 if (response.status === 201) {
-                    await refetch()
-                    await fetchTicketStatuses()
+                    setTimeout(async () => {
+                        await refetch()
+                    }, 1500) // Wait for 1.5 seconds to give time for park gate to notify ticket system
                 }
             })
         } else if (status === 'ENTERED') {
             exitPark(uuid).then(async (response) => {
                 if (response.status === 201) {
-                    await refetch()
-                    await fetchTicketStatuses()
+                    setTimeout(async () => {
+                        await refetch()
+                    }, 1500) // same here
                 }
             })
         }
@@ -108,9 +85,9 @@ export default function ParkGate() {
                             <div>Loading...</div>
                         ) : isError ? (
                             <div>Error loading tickets...</div>
-                        ) : updatedTickets.length > 0 ? (
+                        ) : todaysTicket.length > 0 ? (
                             <Box>
-                                {updatedTickets.map((ticket: Ticket) => (
+                                {todaysTicket.map((ticket: Ticket) => (
                                     <Paper
                                         key={ticket.uuid.uuid}
                                         elevation={2}

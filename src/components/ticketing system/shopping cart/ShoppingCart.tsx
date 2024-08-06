@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import TicketContext from '../../../context/TicketContext'
-import { Ticket, TicketProps } from '../../../model/Ticket'
+import { TicketDTO, TicketProps } from '../../../model/Ticket'
 import {
     Button,
     Card,
@@ -32,7 +32,17 @@ interface TicketStateProps {
     ticketOption: string | undefined
 }
 
-const TicketForm = ({ ticket, index, ticketsState, handleInputChange }) => (
+const TicketForm = ({
+    ticket,
+    index,
+    ticketsState,
+    handleInputChange,
+}: {
+    ticket: TicketProps
+    index: number
+    ticketsState: TicketStateProps[]
+    handleInputChange: (index: number, field: keyof TicketStateProps, value: string) => void
+}) => (
     <Card variant="outlined" className="ticket-card">
         <CardContent>
             <Typography variant="h5">
@@ -106,7 +116,7 @@ function TicketDrawer() {
     }, [ticketsInBasket])
 
     useEffect(() => {
-        const total = ticketsInBasket.reduce((sum, ticket) => sum + parseFloat(ticket.price || '0'), 0)
+        const total = ticketsInBasket.reduce((sum, ticket) => sum + (ticket.price || 0), 0)
         setTotalPrice(total)
     }, [ticketsInBasket])
 
@@ -127,11 +137,13 @@ function TicketDrawer() {
                 setErrorMessage(`Full name too short: ${ticket.fullName}`);
                 return false;
             }
-            const ageLimit = ticket.ageType?.split(' ')[1].toUpperCase().slice(1, -1)
-            const [minAge, maxAge] = ageLimit?.split('-').map(Number);
-            if (Number(ticket.age) <= minAge || Number(ticket.age) >= maxAge) {
-                setErrorMessage(`Age must be corresponding with age bracket for the specific ticket (for person ${ticket.fullName})`);
-                return false;
+            if (ticket.ageType) {
+                const ageLimit = ticket.ageType.split(' ')[1].toUpperCase().slice(1, -1)
+                const [minAge, maxAge] = ageLimit.split('-').map(Number);
+                if (Number(ticket.age) <= minAge || Number(ticket.age) >= maxAge) {
+                    setErrorMessage(`Age must be corresponding with age bracket for the specific ticket (for person ${ticket.fullName})`);
+                    return false;
+                }
             }
         }
         const todayDate = dayjs().startOf('day');
@@ -149,14 +161,15 @@ function TicketDrawer() {
         } else {
             const correct = verifyForm(ticketsState)
             if (correct) {
-                const tickets: Ticket[] = ticketsState.map((ticketState) => ({
+                const tickets: TicketDTO[] = ticketsState.map((ticketState) => ({
                     name: ticketState.fullName,
                     age: Number(ticketState.age),
                     gender: ticketState.gender,
                     ticketOption: (ticketState.ticketOption ?? '').toUpperCase(),
                     ageType: (ticketState.ageType ?? '').split(' ')[0].toUpperCase(),
-                    date: date?.add(1, 'day').toDate() || new Date(),
+                    date: date?.add(1, 'day').toDate() || new Date(), //we have to add a day because dayjs index start at 0
                     email: userEmail,
+                    status: "NEW"
                 }))
 
                 try {

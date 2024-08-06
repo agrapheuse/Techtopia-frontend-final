@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { PointOfInterest } from '../model/PointOfInterest'
-import { Ticket, TicketProps } from '../model/Ticket'
+import { Ticket, TicketDTO } from '../model/Ticket'
 import { StaffMember } from '../model/StaffMember'
 
 export const getPointsOfInterest = async ({ name, open }: { name: string | null; open: boolean | null }) => {
@@ -21,12 +21,6 @@ export const getTicketsForAUser = async ({ email, date }: { email: string; date:
     return tickets.data
 }
 
-export const getTicketStatus = async ({ uuid }: { uuid: string }) => {
-    axios.defaults.baseURL = 'http://localhost:8094'
-    const status = await axios.get<string>(`/tickets/ticketStatus?ticketUUID=${uuid}`)
-    return status.data
-}
-
 export const enterPark = async (uuid: string) => {
     axios.defaults.baseURL = 'http://localhost:8094'
     return await axios.post<void>(`/ticketActivity/enter?ticketUUID=${uuid}`)
@@ -37,7 +31,7 @@ export const exitPark = async (uuid: string) => {
     return await axios.post<void>(`/ticketActivity/exit?ticketUUID=${uuid}`)
 }
 
-const createTicket = async (newTicket: TicketProps) => {
+const createTicket = async (newTicket: TicketDTO) => {
     axios.defaults.baseURL = 'http://localhost:8095'
     try {
         return await axios.post<void>('/tickets/create', newTicket)
@@ -47,7 +41,7 @@ const createTicket = async (newTicket: TicketProps) => {
     }
 }
 
-export const createTicketsOneByOne = async (tickets: TicketProps[]) => {
+export const createTicketsOneByOne = async (tickets: TicketDTO[]) => {
     try {
         const results = []
         for (const ticket of tickets) {
