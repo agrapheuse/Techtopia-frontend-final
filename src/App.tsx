@@ -7,9 +7,10 @@ import ParkGate from './components/park gate/ParkGate'
 import './App.css'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import TicketProvider from './context/TicketProvider'
-import { AppBar, IconButton, Toolbar } from '@mui/material'
+import { AppBar, Button, IconButton, Toolbar } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import LogoutIcon from '@mui/icons-material/Logout'
+import LoginIcon from '@mui/icons-material/Login'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { Navigation } from './Navigation'
 import ShoppingCart from './components/ticketing system/shopping cart/ShoppingCart'
@@ -26,9 +27,10 @@ type HeaderProps = {
 }
 
 function Header({ onOpenDrawer }: HeaderProps) {
-    const { isAuthenticated, logout } = useContext(SecurityContext)
+    const { isAuthenticated, logout, login } = useContext(SecurityContext)
     const navigate = useNavigate()
 
+    console.log(isAuthenticated())
     return (
         <AppBar position="static" color="transparent">
             <Toolbar sx={{ justifyContent: 'space-between' }}>
@@ -36,14 +38,20 @@ function Header({ onOpenDrawer }: HeaderProps) {
                     <IconButton onClick={onOpenDrawer}>
                         <MenuIcon />
                     </IconButton>
-                    <IconButton onClick={() => navigate('/myAccount')}>
-                        <AccountCircleIcon />
-                    </IconButton>
+                    {isAuthenticated() && (
+                        <IconButton onClick={() => navigate('/myAccount')}>
+                            <AccountCircleIcon />
+                        </IconButton>
+                    )}
                 </div>
-                {isAuthenticated() && (
-                    <IconButton onClick={logout}>
-                        <LogoutIcon />
-                    </IconButton>
+                {isAuthenticated() ? (
+                    <Button variant="contained" color="primary" startIcon={<LogoutIcon />} onClick={logout}>
+                        Log Out
+                    </Button>
+                ) : (
+                    <Button variant="contained" color="primary" startIcon={<LoginIcon />} onClick={login}>
+                        Log In
+                    </Button>
                 )}
             </Toolbar>
         </AppBar>

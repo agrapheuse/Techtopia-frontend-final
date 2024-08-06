@@ -9,9 +9,9 @@ interface IWithChildren {
 }
 
 const keycloakConfig = {
-    url: 'http://localhost:8180',
-    realm: 'techtopia',
-    clientId: 'techtopiaReactApp',
+    url: `${process.env.REACT_APP_KC_URL}`,
+    realm: `${process.env.REACT_APP_KC_REALM}`,
+    clientId: `${process.env.REACT_APP_KC_CLIENT_ID}`,
 }
 
 const keycloak: Keycloak = new Keycloak(keycloakConfig)
@@ -22,17 +22,16 @@ function SecurityContextProvider({ children }: IWithChildren) {
     const [userRole, setUserRole] = useState<Array<string> | undefined>(undefined)
 
     useEffect(() => {
-        keycloak.init({ onLoad: 'check-sso', checkLoginIframe: false })
-            .then(authenticated => {
-                if (authenticated) {
-                    addAccessTokenToAuthHeader(keycloak.token)
-                    setLoggedInUser(keycloak.idTokenParsed?.name)
-                    setUserEmail(keycloak.idTokenParsed?.email)
-                    setUserRole(keycloak.tokenParsed?.resource_access?.techtopiaReactApp?.roles)
-                } else {
-                    // Optionally redirect or handle unauthenticated state
-                }
-            })
+        keycloak.init({ onLoad: 'check-sso', checkLoginIframe: false }).then((authenticated) => {
+            if (authenticated) {
+                addAccessTokenToAuthHeader(keycloak.token)
+                setLoggedInUser(keycloak.idTokenParsed?.name)
+                setUserEmail(keycloak.idTokenParsed?.email)
+                setUserRole(keycloak.tokenParsed?.resource_access?.techtopiaReactApp?.roles)
+            } else {
+                // Optionally redirect or handle unauthenticated state
+            }
+        })
 
         keycloak.onAuthSuccess = () => {
             addAccessTokenToAuthHeader(keycloak.token)
@@ -57,8 +56,12 @@ function SecurityContextProvider({ children }: IWithChildren) {
         }
     }, [])
 
+    function login() {
+        window.location.href = keycloak.createLoginUrl()
+    }
+
     function logout() {
-        const logoutOptions = { redirectUri: 'http://localhost:3000/' }
+        const logoutOptions = { redirectUri: process.env.REACT_APP_URL }
         keycloak.logout(logoutOptions)
     }
 
@@ -74,6 +77,7 @@ function SecurityContextProvider({ children }: IWithChildren) {
                 loggedInUser,
                 userEmail,
                 userRole,
+                login,
                 logout,
             }}
         >

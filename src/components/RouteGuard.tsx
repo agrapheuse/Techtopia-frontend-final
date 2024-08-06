@@ -6,16 +6,14 @@ export interface RouteGuardProps {
 }
 
 const RouteGuard = ({ component }: RouteGuardProps) => {
-    const { isAuthenticated } = useContext(SecurityContext)
-
-    const login_url = "http://localhost:8180/realms/techtopia/protocol/openid-connect/auth?client_id=techtopiaReactApp&response_type=code";
+    const { isAuthenticated, login } = useContext(SecurityContext)
 
     useEffect(() => {
         if (!isAuthenticated()) {
             alert("You are redirected to the login page")
-            window.location.href = login_url;
+            login();
         }
-    }, [isAuthenticated])
+    }, [isAuthenticated, login])
 
     return component
 }
