@@ -57,7 +57,7 @@ export const createTicketsOneByOne = async (tickets: TicketProps[]) => {
         return results
     } catch (error) {
         console.error('Error creating tickets:', error)
-        return []
+        throw error
     }
 }
 

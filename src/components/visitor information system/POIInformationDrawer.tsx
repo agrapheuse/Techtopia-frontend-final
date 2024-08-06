@@ -87,7 +87,7 @@ function POIInformationDrawer({
             if (originalOpenStatus !== openStatus) {
                 try {
                     const response = await changeOpenStatus(clickedPOI.uuid.uuid, openStatus === 'open')
-                    if (response.status !== 201) {
+                    if (response.status !== 204) {
                         alert('something went wrong, please try again later')
                     } else {
                         setOriginalOpenStatus(openStatus)
@@ -99,7 +99,7 @@ function POIInformationDrawer({
             } else if (originalSelectedStaffMembers.toString() !== selectedStaffMembers.toString()) {
                 try {
                     const response = await updateStaffMembers(clickedPOI.uuid.uuid, selectedStaffMembers)
-                    if (response.status !== 201) {
+                    if (response.status !== 204) {
                         alert('something went wrong, please try again later')
                     } else {
                         setOriginalSelectedStaffMembers(selectedStaffMembers)

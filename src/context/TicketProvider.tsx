@@ -1,6 +1,6 @@
 import React, {ReactElement, useState} from 'react'
 import TicketContext from './TicketContext'
-import {TicketProps} from "../model/Ticket.ts";
+import {TicketProps} from "../model/Ticket";
 import { useLocalStorage } from 'usehooks-ts'
 
 interface WithChildren {

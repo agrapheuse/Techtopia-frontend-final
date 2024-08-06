@@ -1,5 +1,5 @@
 import React, {createContext} from "react";
-import {TicketProps} from "../model/Ticket.ts";
+import {TicketProps} from "../model/Ticket";
 
 export interface ISettingsContext {
     ageType: string;

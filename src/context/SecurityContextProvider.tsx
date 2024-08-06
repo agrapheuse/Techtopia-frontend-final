@@ -22,30 +22,40 @@ function SecurityContextProvider({ children }: IWithChildren) {
     const [userRole, setUserRole] = useState<Array<string> | undefined>(undefined)
 
     useEffect(() => {
-        keycloak.init({ onLoad: 'login-required' })
-    }, [])
+        keycloak.init({ onLoad: 'check-sso', checkLoginIframe: false })
+            .then(authenticated => {
+                if (authenticated) {
+                    addAccessTokenToAuthHeader(keycloak.token)
+                    setLoggedInUser(keycloak.idTokenParsed?.name)
+                    setUserEmail(keycloak.idTokenParsed?.email)
+                    setUserRole(keycloak.tokenParsed?.resource_access?.techtopiaReactApp?.roles)
+                } else {
+                    // Optionally redirect or handle unauthenticated state
+                }
+            })
 
-    keycloak.onAuthSuccess = () => {
-        addAccessTokenToAuthHeader(keycloak.token)
-        setLoggedInUser(keycloak.idTokenParsed?.name)
-        setUserEmail(keycloak.idTokenParsed?.email)
-        setUserRole(keycloak.tokenParsed?.resource_access?.techtopiaReactApp?.roles)
-    }
-
-    keycloak.onAuthLogout = () => {
-        removeAccessTokenFromAuthHeader()
-    }
-
-    keycloak.onAuthError = () => {
-        removeAccessTokenFromAuthHeader()
-    }
-
-    keycloak.onTokenExpired = () => {
-        keycloak.updateToken(-1).then(function () {
+        keycloak.onAuthSuccess = () => {
             addAccessTokenToAuthHeader(keycloak.token)
             setLoggedInUser(keycloak.idTokenParsed?.name)
-        })
-    }
+            setUserEmail(keycloak.idTokenParsed?.email)
+            setUserRole(keycloak.tokenParsed?.resource_access?.techtopiaReactApp?.roles)
+        }
+
+        keycloak.onAuthLogout = () => {
+            removeAccessTokenFromAuthHeader()
+        }
+
+        keycloak.onAuthError = () => {
+            removeAccessTokenFromAuthHeader()
+        }
+
+        keycloak.onTokenExpired = () => {
+            keycloak.updateToken(-1).then(function () {
+                addAccessTokenToAuthHeader(keycloak.token)
+                setLoggedInUser(keycloak.idTokenParsed?.name)
+            })
+        }
+    }, [])
 
     function logout() {
         const logoutOptions = { redirectUri: 'http://localhost:3000/' }
