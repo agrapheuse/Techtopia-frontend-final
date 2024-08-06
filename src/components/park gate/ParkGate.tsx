@@ -18,12 +18,28 @@ export default function ParkGate() {
     const { userEmail } = useContext(SecurityContext)
     const { isLoading, isError, tickets, refetch } = useTickets({ email: userEmail })
     const [updatedTickets, setUpdatedTickets] = useState<Ticket[]>([])
+    const [todaysTicket, setTodaysTicket] = useState<Ticket[]>([])
+
+    useEffect(() => {
+        if (!isLoading && !isError && tickets.length > 0) {
+            const today = new Date()
+            const formattedToday = today.toISOString().split('T')[0]
+
+            const todayTickets = tickets.filter((t) => {
+                const ticketDate = new Date(t.date)
+                const formattedTicketDate = ticketDate.toISOString().split('T')[0]
+                return formattedTicketDate === formattedToday
+            })
+            console.log(todaysTicket)
+            setTodaysTicket(todayTickets)
+        }
+    }, [isError, isLoading, tickets, todaysTicket])
 
     const fetchTicketStatuses = useCallback(async () => {
         if (!isLoading && !isError && tickets.length > 0) {
             try {
                 const ticketsWithStatus = await Promise.all(
-                    tickets.map(async (ticket) => {
+                    todaysTicket.map(async (ticket) => {
                         const status = await getTicketStatus({ uuid: ticket.uuid.uuid })
                         return {
                             ...ticket,
@@ -36,28 +52,27 @@ export default function ParkGate() {
                 console.error('Error fetching ticket statuses:', error)
             }
         }
-    }, [isLoading, isError, tickets])
+    }, [isLoading, isError, tickets.length, todaysTicket])
 
     useEffect(() => {
-        fetchTicketStatuses()
+        fetchTicketStatuses().then(_r => {})
     }, [fetchTicketStatuses])
 
     const scanTicket = (uuid: string, status: string) => {
-        if (status === "NEW") {
+        if (status === 'NEW') {
             enterPark(uuid).then(async (response) => {
                 if (response.status === 201) {
                     await refetch()
-                    fetchTicketStatuses()
+                    await fetchTicketStatuses()
                 }
             })
-        } else if (status === "ENTERED") {
+        } else if (status === 'ENTERED') {
             exitPark(uuid).then(async (response) => {
                 if (response.status === 201) {
                     await refetch()
-                    fetchTicketStatuses()
+                    await fetchTicketStatuses()
                 }
             })
-
         }
     }
 

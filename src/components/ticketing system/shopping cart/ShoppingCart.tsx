@@ -155,7 +155,7 @@ function TicketDrawer() {
                     gender: ticketState.gender,
                     ticketOption: (ticketState.ticketOption ?? '').toUpperCase(),
                     ageType: (ticketState.ageType ?? '').split(' ')[0].toUpperCase(),
-                    date: date?.toDate() || new Date(),
+                    date: date?.add(1, 'day').toDate() || new Date(),
                     email: userEmail,
                 }))
 

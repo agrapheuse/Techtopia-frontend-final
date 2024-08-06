@@ -30,7 +30,6 @@ function Header({ onOpenDrawer }: HeaderProps) {
     const { isAuthenticated, logout, login } = useContext(SecurityContext)
     const navigate = useNavigate()
 
-    console.log(isAuthenticated())
     return (
         <AppBar position="static" color="transparent">
             <Toolbar sx={{ justifyContent: 'space-between' }}>
