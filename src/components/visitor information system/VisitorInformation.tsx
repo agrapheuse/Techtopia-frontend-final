@@ -5,13 +5,13 @@ import MapView from "./MapView/MapView";
 import "./VisitorInformation.css";
 import {
     Box,
-    Button, Checkbox,
+    Button, Checkbox, Divider,
     Drawer,
     FormControlLabel,
     IconButton, TextField,
     ToggleButton,
-    ToggleButtonGroup,
-} from "@mui/material";
+    ToggleButtonGroup, Typography,
+} from '@mui/material'
 import CloseIcon from "@mui/icons-material/Close";
 import FilterContext from "../../context/FilterContext";
 import useDebounce from "../../hooks/useDebounce";
@@ -39,21 +39,21 @@ export default function VisitorInformation() {
 
     return (
         <div className="info-view-page-container">
-            <Box sx={{position: 'absolute', top: 60, left: '50%', transform: 'translateX(-50%)'}}>
-                <InfoViewToggle toggleStateList={toggleStateList} setToggleStateList={setToggleStateList}/>
+            <Box sx={{ position: 'absolute', top: 60, left: '50%', transform: 'translateX(-50%)' }}>
+                <InfoViewToggle toggleStateList={toggleStateList} setToggleStateList={setToggleStateList} />
             </Box>
             <div className="info-view-content">
                 {toggleStateList === "list" ? (
                     <div className="list-view-container">
-                        <ListView nameFilter={debouncedNameFilter}/>
+                        <ListView nameFilter={debouncedNameFilter} />
                     </div>
                 ) : (
                     <div className="map-view-container">
-                        <MapView nameFilter={debouncedNameFilter}/>
+                        <MapView nameFilter={debouncedNameFilter} />
                     </div>
                 )}
             </div>
-            <Box sx={{position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)'}}>
+            <Box sx={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)' }}>
                 <Button
                     variant="contained"
                     onClick={handleTopDrawerOpen}
@@ -75,12 +75,12 @@ export default function VisitorInformation() {
                 onClose={handleTopDrawerClose}
                 PaperProps={{
                     sx: {
-                        maxHeight: 100,
-                        height: '100%',
+                        height: 'auto',
+                        maxHeight: '70vh',
                     }
                 }}
             >
-                <Box sx={{padding: 2, position: 'relative'}}>
+                <Box sx={{ padding: 2, position: 'relative' }}>
                     <IconButton
                         edge="start"
                         color="inherit"
@@ -92,14 +92,18 @@ export default function VisitorInformation() {
                             zIndex: 100,
                         }}
                     >
-                        <CloseIcon/>
+                        <CloseIcon />
                     </IconButton>
+                    <Typography variant="h6" align="center" gutterBottom>
+                        Filters
+                    </Typography>
+                    <Divider sx={{ marginBottom: 2 }} />
                     <Box
                         sx={{
                             display: 'flex',
-                            justifyContent: 'center',
+                            flexDirection: 'column',
                             alignItems: 'center',
-                            height: '100%'
+                            gap: 2,
                         }}
                     >
                         <ToggleButtonGroup
@@ -126,9 +130,9 @@ export default function VisitorInformation() {
                             variant="outlined"
                             value={nameFilter}
                             onChange={(e) => setNameFilter(e.target.value)}
-                            sx={{ marginTop: 2 }}
+                            sx={{ width: '40%' }}
                         />
-                        <Button variant="outlined" onClick={handleResetFilters}>
+                        <Button variant="contained" onClick={handleResetFilters} sx={{ marginTop: 2 }}>
                             Reset Filters
                         </Button>
                     </Box>

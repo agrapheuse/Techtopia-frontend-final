@@ -15,7 +15,7 @@ export default function MyAccount() {
     }
 
     const { loggedInUser, userEmail, userRole, logout } = useContext(SecurityContext)
-    const { isLoading, isError, tickets } = useTickets({ email: userEmail })
+    const { isLoading, isError, tickets } = useTickets({ email: userEmail || "" })
 
     return (
         <div style={backgroundImageStyle}>
@@ -79,7 +79,7 @@ export default function MyAccount() {
                                                 <strong>Ticket ID:</strong> {ticket.uuid.uuid}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Date:</strong> {ticket.date}
+                                                <strong>Date:</strong> {`${ticket.date}`}
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Name:</strong> {ticket.name}

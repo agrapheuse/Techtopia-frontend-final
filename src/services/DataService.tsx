@@ -12,10 +12,9 @@ export const getPointsOfInterest = async ({ name, open }: { name: string | null;
     return pointOfInterest.data
 }
 
-export const getTicketsForAUser = async ({ email, date }: { email: string; date: Date | null }) => {
+export const getTicketsForAUser = async ({ email }: { email: string }) => {
     axios.defaults.baseURL = 'http://localhost:8095'
     let url = `/tickets/fetchByEmail?email=${email}`
-    if (date) url += `date=${date}&`
 
     const tickets = await axios.get<Ticket[]>(url)
     return tickets.data

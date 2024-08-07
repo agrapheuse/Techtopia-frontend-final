@@ -53,13 +53,13 @@ export function usePointsOfInterest({ name, open }: { name: string | null; open:
     }
 }
 
-export function useTickets({ email, date }: { email: string; date: Date | null }) {
+export function useTickets({ email }: { email: string }) {
     const {
         isLoading,
         isError,
         data: tickets,
         refetch,
-    } = useQuery(['tickets', { email }], () => getTicketsForAUser({ email, date }))
+    } = useQuery(['tickets', { email }], () => getTicketsForAUser({ email }))
 
     return {
         isLoading,

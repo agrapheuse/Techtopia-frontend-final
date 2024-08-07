@@ -16,7 +16,7 @@ export default function ParkGate() {
     }
 
     const { userEmail } = useContext(SecurityContext)
-    const { isLoading, isError, tickets, refetch } = useTickets({ email: userEmail })
+    const { isLoading, isError, tickets, refetch } = useTickets({ email: userEmail || "" })
     const [todaysTicket, setTodaysTicket] = useState<Ticket[]>([])
 
     useEffect(() => {
