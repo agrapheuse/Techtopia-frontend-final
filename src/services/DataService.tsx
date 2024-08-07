@@ -12,9 +12,10 @@ export const getPointsOfInterest = async ({ name, open }: { name: string | null;
     return pointOfInterest.data
 }
 
-export const getTicketsForAUser = async ({ email }: { email: string }) => {
+export const getTicketsForAUser = async ({ email, status }: { email: string, status: string | undefined }) => {
     axios.defaults.baseURL = 'http://localhost:8095'
     let url = `/tickets/fetchByEmail?email=${email}`
+    if (status) url += `&status=${status}`
 
     const tickets = await axios.get<Ticket[]>(url)
     return tickets.data
@@ -28,6 +29,11 @@ export const enterPark = async (uuid: string) => {
 export const exitPark = async (uuid: string) => {
     axios.defaults.baseURL = 'http://localhost:8094'
     return await axios.post<void>(`/ticketActivity/exit?ticketUUID=${uuid}`)
+}
+
+export const scanTicket = async (ticketUUID: string, poiUUID: string) => {
+    axios.defaults.baseURL = 'http://localhost:8094'
+    return await axios.post<void>(`/ticketActivity/visitedPOI?ticketUUID=${ticketUUID}&poiUUID=${poiUUID}`)
 }
 
 const createTicket = async (newTicket: TicketDTO) => {

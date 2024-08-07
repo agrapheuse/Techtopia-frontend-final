@@ -22,6 +22,7 @@ import SecurityContext from '../../context/SecurityContext'
 import { UseQueryResult } from 'react-query'
 import { useStaffMembers } from '../../hooks/CustomHooks'
 import { StaffMember } from '../../model/StaffMember'
+import SimpleDialog from './SimpleDialog'
 
 interface POIInformationDrawerProps {
     isDrawerOpen: boolean
@@ -40,10 +41,12 @@ function POIInformationDrawer({
 }: POIInformationDrawerProps) {
     const [openStatus, setOpenStatus] = useState<string>('')
     const [originalOpenStatus, setOriginalOpenStatus] = useState<string>('')
-    const { userRole } = useContext(SecurityContext)
+    const { userRole, isAuthenticated } = useContext(SecurityContext)
     const [selectedStaffMembers, setSelectedStaffMembers] = useState<string[]>([])
     const [availableStaffMembers, setAvailableStaffMembers] = useState<StaffMember[]>([])
     const [originalSelectedStaffMembers, setOriginalSelectedStaffMembers] = useState<string[]>([])
+    const [dialogOpen, setDialogOpen] = useState(false);
+
     const {
         isLoading: isLoadingAllStaffMembers,
         isError: isErrorAllStaffMembers,
@@ -110,6 +113,14 @@ function POIInformationDrawer({
                 }
             }
         }
+    }
+
+    const openDialog = () => {
+        setDialogOpen(true);
+    }
+
+    const closeDialog = () => {
+        setDialogOpen(false);
     }
 
     return (
@@ -234,6 +245,31 @@ function POIInformationDrawer({
                                         </Button>
                                     </Box>
                                 )}
+                            </>
+                        )}
+                        {isAuthenticated() && (
+                            <>
+                                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+                                    <Button
+                                        variant="contained"
+                                        onClick={openDialog}
+                                        size="large"
+                                        sx={{
+                                            padding: '12px 24px',
+                                            fontSize: '18px',
+                                            backgroundColor: '#f4ecd7',
+                                            color: '#1a1a17',
+                                            zIndex: '1000',
+                                        }}
+                                    >
+                                        Scan into point of interest
+                                    </Button>
+                                </Box>
+                                <SimpleDialog
+                                    open={dialogOpen}
+                                    onClose={closeDialog}
+                                    poiUUID={clickedPOI?.uuid.uuid}
+                                />
                             </>
                         )}
                     </Box>
